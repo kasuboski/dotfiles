@@ -1,0 +1,15 @@
+{{- if (eq .chezmoi.os "darwin") -}}
+#!/bin/bash
+
+brew bundle --no-lock --file=/dev/stdin <<EOF
+brew "fish"
+brew "starship"
+brew "zoxide"
+brew "bat"
+brew "fd"
+brew "lsd"
+EOF
+
+echo "/opt/homebrew/bin/fish" | sudo tee -a /etc/shells
+chsh -s /opt/homebrew/bin/fish
+{{ end -}}
