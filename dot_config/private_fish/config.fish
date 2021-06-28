@@ -7,4 +7,6 @@ set -q MANPATH; or set MANPATH ''; set -gx MANPATH "/opt/homebrew/share/man" $MA
 set -q INFOPATH; or set INFOPATH ''; set -gx INFOPATH "/opt/homebrew/share/info" $INFOPATH;
 
 starship init fish | source
+zoxide init fish | source
+
 source ~/.config/fish/aliases.fish
