@@ -4,3 +4,5 @@ curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs https://raw.g
 nvim -c "PlugInstall | :qa"
 
 pipx install pyinfra
+
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
