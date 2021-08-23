@@ -8,6 +8,7 @@ set -q INFOPATH; or set INFOPATH ''; set -gx INFOPATH "/opt/homebrew/share/info"
 
 fish_add_path -m ~/.local/bin
 fish_add_path -m ~/.cargo/bin
+fish_add_path -m "/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
 
 starship init fish | source
 zoxide init fish | source
