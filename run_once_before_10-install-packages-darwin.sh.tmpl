@@ -21,6 +21,6 @@ brew "kustomize"
 brew "nmap"
 EOF
 
-echo "/opt/homebrew/bin/fish" | sudo tee -a /etc/shells
-chsh -s /opt/homebrew/bin/fish
+echo "$(brew --prefix)/bin/fish" | sudo tee -a /etc/shells
+chsh -s "$(brew --prefix)/bin/fish"
 {{ end -}}
