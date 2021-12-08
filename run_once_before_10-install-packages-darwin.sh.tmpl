@@ -2,6 +2,7 @@
 #!/bin/bash
 
 brew bundle --no-lock --file=/dev/stdin <<EOF
+# shell
 brew "fish"
 brew "starship"
 brew "fzf"
@@ -10,19 +11,31 @@ brew "bat"
 brew "fd"
 brew "lsd"
 brew "neovim"
-brew "hugo"
-brew "pipx"
+
+# cloudy
 brew "kubectl"
 brew "helm"
-brew "kubeseal"
-brew "git-crypt"
-brew "gpg"
 brew "kustomize"
-brew "nmap"
 brew "azure-cli"
 brew "FairwindsOps/tap/pluto"
 brew "octant"
+cask "google-cloud-sdk"
+brew "pulumi"
+brew "kubeseal"
+
+# python
+brew "pipx"
 brew "pyenv"
+
+# Misc
+brew "hugo"
+brew "git-crypt"
+brew "gpg"
+brew "nmap"
+
+{{- if eq .usage "work" }}
+brew "replicatedhq/replicated/cli"
+{{- end }}
 EOF
 
 echo "$(brew --prefix)/bin/fish" | sudo tee -a /etc/shells
