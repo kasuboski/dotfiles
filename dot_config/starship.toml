@@ -1,2 +1,8 @@
 [line_break]
 disabled = true
+
+[kubernetes]
+disabled = false
+
+[kubernetes.context_aliases]
+"gke_.*_(?P<cluster>[\\w-]+)" = "gke-$cluster"
