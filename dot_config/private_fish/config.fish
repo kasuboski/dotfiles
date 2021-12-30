@@ -18,6 +18,7 @@ fish_add_path -m ~/.local/bin
 fish_add_path -m ~/.cargo/bin
 fish_add_path -m "/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
 fish_add_path -m /usr/local/go/bin
+fish_add_path -m ~/.krew/bin
 
 set -Ux PYENV_ROOT $HOME/.pyenv
 fish_add_path -m $PYENV_ROOT/bin

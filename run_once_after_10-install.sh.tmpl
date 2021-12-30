@@ -1,0 +1,5 @@
+#!/bin/bash
+
+{{- if eq .usage "work" }}
+~/.krew/bin/kubectl-krew install minio
+{{- end }}
