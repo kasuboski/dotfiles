@@ -14,6 +14,10 @@ if test -d (brew --prefix)"/share/fish/vendor_completions.d"
   set -gp fish_complete_path (brew --prefix)/share/fish/vendor_completions.d
 end
 
+if test -d /usr/local/opt/libpq/bin
+  fish_add_path -m /usr/local/opt/libpq/bin/
+end
+
 fish_add_path -m ~/.local/bin
 fish_add_path -m ~/.cargo/bin
 fish_add_path -m "/Applications/Visual Studio Code.app/Contents/Resources/app/bin"

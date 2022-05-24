@@ -46,6 +46,7 @@ brew "hey"
 brew "jq"
 brew "yq"
 brew "gh"
+brew "libpq"
 
 {{- if eq .usage "work" }}
 brew "replicatedhq/replicated/cli"
@@ -53,6 +54,7 @@ brew "datawire/blackbird/telepresence"
 brew "vmware-tanzu/carvel/imgpkg"
 brew "vmware-tanzu/carvel/kbld"
 brew "awscli"
+cask "session-manager-plugin"
 brew "certbot"
 {{- end }}
 EOF
