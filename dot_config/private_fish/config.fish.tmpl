@@ -18,9 +18,14 @@ if test -d /usr/local/opt/libpq/bin
   fish_add_path -m /usr/local/opt/libpq/bin/
 end
 
+source ~/.asdf/asdf.fish
+mkdir -p ~/.config/fish/completions; and ln -sf ~/.asdf/completions/asdf.fish ~/.config/fish/completions
+
 fish_add_path -m ~/.local/bin
-fish_add_path -m ~/.cargo/bin
+#fish_add_path -m ~/.cargo/bin
+{{ if eq .chezmoi.os "darwin" -}}
 fish_add_path -m "/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
+{{ end }}
 fish_add_path -m /usr/local/go/bin
 fish_add_path -m ~/.krew/bin
 

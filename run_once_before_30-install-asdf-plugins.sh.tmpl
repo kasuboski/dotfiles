@@ -1,0 +1,8 @@
+#!/bin/bash
+asdf plugin-add azure-cli https://github.com/itspngu/asdf-azure-cli
+asdf plugin-add krew https://github.com/jimmidyson/asdf-krew.git
+asdf plugin-add rust https://github.com/code-lever/asdf-rust.git
+
+{{- if eq .usage "work" }}
+asdf plugin add kubectl-kots
+{{- end }}
