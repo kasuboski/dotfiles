@@ -6,6 +6,8 @@ alias vim nvim
 alias k kubectl
 alias kgpo 'kubectl get pods'
 
+alias gdb 'git branch -D'
+
 {{ if eq .chezmoi.os "darwin" -}}
 alias flush_dns 'sudo dscacheutil -flushcache;sudo killall -HUP mDNSResponder'
 {{ end }}
