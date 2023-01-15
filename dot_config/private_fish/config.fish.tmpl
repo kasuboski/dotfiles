@@ -36,8 +36,10 @@ fish_add_path -m ~/.krew/bin
 set -Ux PYENV_ROOT $HOME/.pyenv
 fish_add_path -m $PYENV_ROOT/bin
 
-status is-login; and pyenv init --path | source
-status is-interactive; and pyenv init - | source
+if type -q pyenv
+  status is-login; and pyenv init --path | source
+  status is-interactive; and pyenv init - | source
+end
 
 starship init fish | source
 zoxide init fish | source
