@@ -6,7 +6,7 @@ rust stable
 # renovate: datasource=github-releases depName=replicatedhq/kots versioning=loose
 kubectl-kots v1.77.0
 
-{{- if ne .osRelease.id "nixos" }}
+{{- if ne .chezmoi.osRelease.id "nixos" }}
 # renovate: datasource=repology depName=homebrew/azure-cli versioning=loose
 azure-cli 2.38.0
 {{- end }}
