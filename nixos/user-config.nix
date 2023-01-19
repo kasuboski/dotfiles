@@ -29,6 +29,8 @@
         python310Packages.pipx
         asdf-vm
         doppler
+        kubectl
+        kubecolor
     ];
 
     programs.fish.enable = true;

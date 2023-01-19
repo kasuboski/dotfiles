@@ -13,5 +13,14 @@
           ./user-config.nix
         ];
       };
+
+      nixosConfigurations.nixosx86 = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = attrs;
+        modules = [
+          lima.nixosModules.lima
+          ./user-config.nix
+        ];
+      };
     };
 }
