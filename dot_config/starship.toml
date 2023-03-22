@@ -9,3 +9,8 @@ disabled = false
 
 [kubernetes.context_aliases]
 "gke_.*_(?P<cluster>[\\w-]+)" = "gke-$cluster"
+
+[nix_shell]
+disabled = false
+
+

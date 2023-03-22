@@ -1,5 +1,3 @@
-# renovate: datasource=repology depName=homebrew/azure-cli versioning=loose
-azure-cli 2.38.0
 # renovate: datasource=github-releases depName=kubernetes-sigs/krew versioning=loose
 krew 0.4.3
 rust stable
@@ -7,4 +5,9 @@ rust stable
 {{- if eq .usage "work" }}
 # renovate: datasource=github-releases depName=replicatedhq/kots versioning=loose
 kubectl-kots 1.79.0
+
+{{- if ne .chezmoi.osRelease.id "nixos" }}
+# renovate: datasource=repology depName=homebrew/azure-cli versioning=loose
+azure-cli 2.38.0
+{{- end }}
 {{- end }}
