@@ -37,6 +37,8 @@
     programs.fish.enable = true;
     
     nix.settings.trusted-users = [ "root" "josh" ];
+    
+    nixpkgs.config.allowBroken = true;
 
     users.users.josh = {
         shell = "/run/current-system/sw/bin/fish";
