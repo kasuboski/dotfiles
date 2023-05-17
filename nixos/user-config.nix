@@ -11,6 +11,7 @@
     # still requires systemctl --user enable auto-fix-vscode-server.service
     # systemctl --user start auto-fix-vscode-server.service
     environment.systemPackages = with pkgs; [
+        cachix
         htop
         lsd
         fd
@@ -34,6 +35,8 @@
     ];
 
     programs.fish.enable = true;
+    
+    nix.settings.trusted-users = [ "root" "josh" ];
 
     users.users.josh = {
         shell = "/run/current-system/sw/bin/fish";
