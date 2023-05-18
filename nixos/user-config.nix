@@ -39,7 +39,7 @@
     nix.settings.trusted-users = [ "root" "josh" ];
     
     virtualisation.docker.enable = true;
-    users.extraGroups.docker.members = [ "josh" ];
+    users.users.josh.extraGroups = [ "wheel" "docker" ];
 
     users.users.josh = {
         shell = "/run/current-system/sw/bin/fish";
