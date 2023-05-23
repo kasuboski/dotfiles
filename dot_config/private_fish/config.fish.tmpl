@@ -41,6 +41,10 @@ if type -q pyenv
   status is-interactive; and pyenv init - | source
 end
 
+if type -q nix
+  fish_add_path -m ~/.nix-profile/bin
+end
+
 fish_config theme choose "Catppuccin%20Mocha"
 
 starship init fish | source
