@@ -24,7 +24,7 @@
   nix = {
     settings = {
       trusted-users = [ "root" "@wheel" ];
-      auto-optimise-store = lib.mkDefault true;
+      auto-optimise-store = true;
       experimental-features = [ "nix-command" "flakes" ];
       system-features = [ "kvm" ];
 
@@ -45,6 +45,7 @@
      wget
      curl
      htop
+     git
    ];
 
   users.mutableUsers = false;
@@ -77,7 +78,7 @@
     enable = true;
   };
 
-  networking.firewall.allowedUDPPorts = [ ${services.tailscale.port} ];
+  networking.firewall.allowedUDPPorts = [ config.services.tailscale.port ];
 
   environment.persistence."/persist" = {
     directories = [
