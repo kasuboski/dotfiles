@@ -21,9 +21,20 @@
 
   # Set your time zone.
   # time.timeZone = "Europe/Amsterdam";
+  nix = {
+    settings = {
+      trusted-users = [ "root" "@wheel" ];
+      auto-optimise-store = lib.mkDefault true;
+      experimental-features = [ "nix-command" "flakes" ];
+      system-features = [ "kvm" ];
 
-  nix.settings.trusted-users = [ "@wheel" ];
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+    };
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 2d";
+    };
+  };
 
   security.sudo.wheelNeedsPassword = false;  
 
@@ -62,9 +73,16 @@
     '';
   };
 
+  services.tailscale = {
+    enable = true;
+  };
+
+  networking.firewall.allowedUDPPorts = [ ${services.tailscale.port} ];
+
   environment.persistence."/persist" = {
     directories = [
       "/etc/nixos"
+      "/var/lib/tailscale"
     ];
     files = [
       "/etc/machine-id"
