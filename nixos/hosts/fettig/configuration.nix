@@ -59,6 +59,9 @@
     passwordFile = "/persist/passwords/josh";
   };
 
+  services.netdata.enable = true;
+  networking.firewall.allowedTCPPorts = [ 19999 ];
+
   # Enable the OpenSSH daemon.
   services.openssh = {
     enable = true;
