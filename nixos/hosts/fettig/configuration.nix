@@ -38,6 +38,7 @@
   };
 
   security.sudo.wheelNeedsPassword = false;  
+  boot.kernelModules = [ "nct6775" ];
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
@@ -47,6 +48,7 @@
     curl
     htop
     git
+    lm_sensors
   ];
 
   users.mutableUsers = false;
