@@ -9,6 +9,7 @@
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
       ./ephemeral.nix
+      ../../users/josh
     ];
 
   # Use the systemd-boot EFI boot loader.
@@ -52,14 +53,6 @@
   ];
 
   users.mutableUsers = false;
-  users.users.josh = {
-    isNormalUser = true;
-    extraGroups = [ "wheel" ];
-    openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJzR7zD/n14hIPjRWN8lGIj2zSmmFaqBX2Qhf80TOmdQ josh.kasuboski@gmail.com"
-    ];
-    passwordFile = "/persist/passwords/josh";
-  };
 
   services.netdata.enable = true;
   networking.firewall.allowedTCPPorts = [ 19999 ];
