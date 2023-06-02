@@ -6,16 +6,26 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { nixpkgs, impermanence, home-manager, ... }@inputs: {
+  outputs = {
+    nixpkgs,
+    impermanence,
+    home-manager,
+    ...
+  } @ inputs: let
+    forEachSystem = nixpkgs.lib.genAttrs ["x86_64-linux" "aarch64-linux"];
+    forEachPkgs = f: forEachSystem (sys: f nixpkgs.legacyPackages.${sys});
+  in {
+    formatter = forEachPkgs (pkgs: pkgs.alejandra);
     nixosConfigurations = {
-      fettig = nixpkgs.lib.nixosSystem { 
+      fettig = nixpkgs.lib.nixosSystem {
         specialArgs = inputs;
         modules = [
           impermanence.nixosModule
           ./configuration.nix
-          home-manager.nixosModules.home-manager {
+          home-manager.nixosModules.home-manager
+          {
             home-manager.useGlobalPkgs = true;
-	    home-manager.useUserPackages = true;
+            home-manager.useUserPackages = true;
           }
         ];
       };

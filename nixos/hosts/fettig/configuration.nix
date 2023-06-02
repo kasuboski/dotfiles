@@ -1,17 +1,18 @@
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
-
-{ config, pkgs, ... }:
-
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-      ./cachix.nix
-      ./ephemeral.nix
-      ../../users/josh
-    ];
+  config,
+  pkgs,
+  ...
+}: {
+  imports = [
+    # Include the results of the hardware scan.
+    ./hardware-configuration.nix
+    ./cachix.nix
+    ./ephemeral.nix
+    ../../users/josh
+  ];
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
@@ -26,11 +27,10 @@
   # time.timeZone = "Europe/Amsterdam";
   nix = {
     settings = {
-      trusted-users = [ "root" "@wheel" ];
+      trusted-users = ["root" "@wheel"];
       auto-optimise-store = true;
-      experimental-features = [ "nix-command" "flakes" ];
-      system-features = [ "kvm" ];
-
+      experimental-features = ["nix-command" "flakes"];
+      system-features = ["kvm"];
     };
     gc = {
       automatic = true;
@@ -39,8 +39,8 @@
     };
   };
 
-  security.sudo.wheelNeedsPassword = false;  
-  boot.kernelModules = [ "nct6775" ];
+  security.sudo.wheelNeedsPassword = false;
+  boot.kernelModules = ["nct6775"];
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
@@ -56,7 +56,7 @@
   users.mutableUsers = false;
 
   services.netdata.enable = true;
-  networking.firewall.allowedTCPPorts = [ 19999 ];
+  networking.firewall.allowedTCPPorts = [19999];
 
   # Enable the OpenSSH daemon.
   services.openssh = {
@@ -78,7 +78,7 @@
     enable = true;
   };
 
-  networking.firewall.allowedUDPPorts = [ config.services.tailscale.port ];
+  networking.firewall.allowedUDPPorts = [config.services.tailscale.port];
 
   environment.persistence."/persist" = {
     directories = [
@@ -99,6 +99,4 @@
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "22.11"; # Did you read the comment?
-
 }
-
