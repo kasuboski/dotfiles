@@ -17,6 +17,7 @@
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
 
   networking.hostName = "fettig"; # Define your hostname.
   # Pick only one of the below networking options.
@@ -30,7 +31,7 @@
       trusted-users = ["root" "@wheel"];
       auto-optimise-store = true;
       experimental-features = ["nix-command" "flakes"];
-      system-features = ["kvm" "big-parallel"];
+      system-features = ["kvm" "nixos-test" "benchmark" "big-parallel"];
     };
     gc = {
       automatic = true;
