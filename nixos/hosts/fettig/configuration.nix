@@ -30,7 +30,7 @@
       trusted-users = ["root" "@wheel"];
       auto-optimise-store = true;
       experimental-features = ["nix-command" "flakes"];
-      system-features = ["kvm"];
+      system-features = ["kvm" "big-parallel"];
     };
     gc = {
       automatic = true;
