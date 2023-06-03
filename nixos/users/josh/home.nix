@@ -11,6 +11,7 @@
   programs = {
     home-manager.enable = true;
     git.enable = true;
+    gh.enable = true;
     bat.enable = true;
     direnv.enable = true;
     fish.enable = true;
