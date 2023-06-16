@@ -22,7 +22,15 @@
     home-manager.enable = true;
     git.enable = true;
     gh.enable = true;
-    bat.enable = true;
+    bat = {
+      enable = true;
+      themes = {
+        catppuccinMocha = builtins.readFile ../../../dot_config/bat/themes/Catppuccin-mocha.tmTheme;
+      };
+      config = {
+        theme = "catppuccinMocha";
+      };
+    };
     direnv = {
       enable = true;
       nix-direnv.enable = true;
