@@ -1,4 +1,5 @@
 {
+  inputs,
   config,
   modulesPath,
   pkgs,
@@ -6,46 +7,35 @@
   ...
 }: {
   imports = [
-    (fetchTarball {
-      url = "https://github.com/msteen/nixos-vscode-server/tarball/master";
-      sha256 = "08snszxxhn6ifjqphd2c4svk0h1gkk3ancsv7wz5h1ss4kaayhgy";
-    })
+    inputs.home-manager.nixosModules.home-manager
+    {
+      home-manager.extraSpecialArgs = {inherit inputs;};
+      home-manager.useGlobalPkgs = true;
+      home-manager.useUserPackages = true;
+      # don't mess with same nixos user for now
+      home-manager.users.josh = import ../../users/josh/home.nix;
+    }
   ];
 
-  services.vscode-server.enable = true;
-  # still requires systemctl --user enable auto-fix-vscode-server.service
-  # systemctl --user start auto-fix-vscode-server.service
   environment.systemPackages = with pkgs; [
-    cachix
+    vim
     htop
-    lsd
-    fd
-    bat
-    fzf
-    zoxide
-    jq
-    yq
+    git
+    curl
+    wget
     fish
-    starship
-    nixpkgs-fmt
-    chezmoi
-    neovim
-    gnupg
-    python3
-    python310Packages.pipx
-    asdf-vm
-    doppler
-    kubectl
-    kubecolor
   ];
 
+  # https://github.com/nix-community/home-manager/pull/2408
+  environment.pathsToLink = ["/share/fish"];
   programs.fish.enable = true;
 
-  nix.settings.trusted-users = ["root" "josh"];
+  nix.settings.trusted-users = ["root" "@wheel" "josh"];
 
   virtualisation.docker.enable = true;
   users.users.josh.extraGroups = ["wheel" "docker"];
 
+  home-manager.users.josh.home.homeDirectory = "/home/josh.linux";
   users.users.josh = {
     shell = "/run/current-system/sw/bin/fish";
     isNormalUser = true;

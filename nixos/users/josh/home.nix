@@ -13,7 +13,7 @@
   home = {
     stateVersion = "23.05";
     username = "josh";
-    homeDirectory = "/home/${config.home.username}";
+    homeDirectory = lib.mkDefault "/home/${config.home.username}";
   };
 
   xdg.enable = true;
