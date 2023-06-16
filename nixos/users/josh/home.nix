@@ -72,6 +72,12 @@
       defaultEditor = true;
       viAlias = true;
       vimAlias = true;
+      extraConfig = ''
+        set number
+        set expandtab
+        set tabstop=2
+        set shiftwidth=2
+      '';
     };
     starship = {
       enable = true;
