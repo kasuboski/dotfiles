@@ -38,12 +38,33 @@
     };
     fish = {
       enable = true;
-      interactiveShellInit = lib.strings.concatStrings (lib.strings.intersperse "\n" ([
+      interactiveShellInit = lib.strings.concatStrings (lib.strings.intersperse "\n" [
         "fish_config theme choose CatppuccinMocha"
-      ]));
+      ]);
+      shellAliases = {
+        kgpo = "k get pods";
+      };
+      functions =
+        {
+          k = {
+            wraps = "kubectl";
+            description = "alias kubectl";
+            body = ''
+              if type -q kubecolor
+                kubecolor $argv
+              else
+                kubectl $argv
+              end
+            '';
+          };
+        }
+        // (lib.optionalAttrs (pkgs.stdenv.isDarwin) {
+          flush_dns = "sudo dscacheutil -flushcache;sudo killall -HUP mDNSResponder";
+        });
     };
     fzf.enable = true;
     lsd = {
+      enable = true;
       enableAliases = true;
     };
     neovim = {
