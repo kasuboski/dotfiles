@@ -4,7 +4,11 @@
   lib,
   pkgs,
   ...
-}: {
+}: let
+  isDarwin = pkgs.stdenv.isDarwin;
+  isLinux = pkgs.stdenv.isLinux;
+  manpager = pkgs.writeShellScriptBin "manpager" "sh -c 'col -bx | bat -l man -p'";
+in {
   imports = [
     inputs.vscode-server.homeModules.default
   ];
@@ -16,12 +20,28 @@
     homeDirectory = lib.mkDefault "/home/${config.home.username}";
   };
 
+  home.sessionVariables = {
+    LANG = "en_US.UTF-8";
+    LC_CTYPE = "en_US.UTF-8";
+    LC_ALL = "en_US.UTF-8";
+    MANPAGER = "${manpager}/bin/manpager";
+  };
+
   xdg.enable = true;
   xdg.configFile."fish/themes/CatppuccinMocha.theme".source = ../../../dot_config/private_fish/themes/CatppuccinMocha.theme;
 
   programs = {
     home-manager.enable = true;
-    git.enable = true;
+    git = {
+      enable = true;
+      userName = "Josh Kasuboski";
+      userEmail = "josh.kasuboski@gmail.com";
+      extraConfig = {
+        init.defaultBranch = "main";
+        github.user = "kasuboski";
+        color.ui = true;
+      };
+    };
     gh.enable = true;
     bat = {
       enable = true;
@@ -57,8 +77,14 @@
               end
             '';
           };
+          help = {
+            description = "send command help info to bat";
+            body = ''
+              $argv --help 2>&1 | bat -l help -p
+            '';
+          };
         }
-        // (lib.optionalAttrs (pkgs.stdenv.isDarwin) {
+        // (lib.optionalAttrs isDarwin {
           flush_dns = "sudo dscacheutil -flushcache;sudo killall -HUP mDNSResponder";
         });
     };
@@ -90,6 +116,7 @@
     comma
     fd
     jq
+    ripgrep
     yq
   ];
 }
