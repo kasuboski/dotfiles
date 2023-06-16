@@ -1,5 +1,10 @@
-{ inputs, config, lib, pkgs, ... }:
 {
+  inputs,
+  config,
+  lib,
+  pkgs,
+  ...
+}: {
   imports = [
     inputs.vscode-server.homeModules.default
   ];
@@ -12,7 +17,7 @@
   };
 
   xdg.enable = true;
-     
+
   programs = {
     home-manager.enable = true;
     git.enable = true;
