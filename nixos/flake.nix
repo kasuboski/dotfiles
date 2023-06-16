@@ -28,12 +28,6 @@
         modules = [
           impermanence.nixosModule
           ./hosts/fettig/configuration.nix
-          home-manager.nixosModules.home-manager
-          {
-            home-manager.extraSpecialArgs = {inherit inputs;};
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-          }
         ];
       };
 
@@ -42,7 +36,7 @@
         specialArgs = {inherit inputs;};
         modules = [
           lima.nixosModules.lima
-          ./user-config.nix
+          ./hosts/lima/user-config.nix
         ];
       };
 
@@ -51,7 +45,7 @@
         specialArgs = {inherit inputs;};
         modules = [
           lima.nixosModules.lima
-          ./user-config.nix
+          ./hosts/lima/user-config.nix
         ];
       };
     };
