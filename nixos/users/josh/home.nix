@@ -1,5 +1,10 @@
-{ config, lib, pkgs, ... }:
+{ inputs, config, lib, pkgs, ... }:
 {
+  imports = [
+    inputs.vscode-server.homeModules.default
+  ];
+  services.vscode-server.enable = true;
+
   home = {
     stateVersion = "23.05";
     username = "josh";
