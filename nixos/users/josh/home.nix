@@ -17,6 +17,7 @@
   };
 
   xdg.enable = true;
+  xdg.configFile."fish/themes/CatppuccinMocha.theme".source = ../../../dot_config/private_fish/themes/CatppuccinMocha.theme;
 
   programs = {
     home-manager.enable = true;
@@ -35,7 +36,12 @@
       enable = true;
       nix-direnv.enable = true;
     };
-    fish.enable = true;
+    fish = {
+      enable = true;
+      interactiveShellInit = lib.strings.concatStrings (lib.strings.intersperse "\n" ([
+        "fish_config theme choose CatppuccinMocha"
+      ]));
+    };
     fzf.enable = true;
     lsd = {
       enableAliases = true;
