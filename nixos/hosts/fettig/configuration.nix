@@ -10,6 +10,7 @@
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
+    inputs.impermanence.nixosModule
     inputs.home-manager.nixosModules.home-manager
     {
       home-manager.extraSpecialArgs = {inherit inputs;};
