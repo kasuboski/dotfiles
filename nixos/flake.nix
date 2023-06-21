@@ -2,6 +2,7 @@
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-unstable";
     lima.url = "github:kasuboski/nixos-lima";
+    lima.inputs.nixpkgs.follows = "nixpkgs";
     impermanence.url = "github:Nix-community/impermanence";
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
