@@ -17,6 +17,7 @@
       home-manager.useGlobalPkgs = true;
       home-manager.useUserPackages = true;
     }
+    ./storage.nix
     ./cachix.nix
     ./ephemeral.nix
     ../../users/josh
