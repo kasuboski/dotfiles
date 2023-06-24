@@ -49,6 +49,14 @@
         };
       }
       {
+        name = "/mnt/${d.name}/.snapshots";
+        value = {
+          device = "/dev/disk/by-uuid/${d.uuid}";
+          fsType = "btrfs";
+          options = ["subvol=.snapshots"];
+        };
+      }
+      {
         name = "/mnt/snapraid-content/${d.name}";
         value = {
           device = "/dev/disk/by-uuid/${d.uuid}";
@@ -70,6 +78,7 @@
 in {
   environment.systemPackages = with pkgs; [
     mergerfs
+    (callPackage ../../pkgs/snapraid-btrfs.nix {})
   ];
 
   fileSystems =
@@ -117,8 +126,6 @@ in {
   };
 
   services.snapper = {
-    snapshotInterval = "";
-    cleanupInterval = "";
     configs = snapperConfigs;
   };
 }
