@@ -76,4 +76,36 @@ in {
     }
     // mkParityFs disks
     // mkDataFs disks;
+
+  snapraid = {
+    enable = true;
+    sync.interval = "";
+    scrub.interval = "";
+    parityFiles = builtins.map (p: "/mnt/${p.name}/snapraid.parity") parityDisks;
+    contentFiles =
+      [
+        "/var/snapraid.content"
+      ]
+      ++ builtins.map (d: "/mnt/snapraid-content/${d.name}/snapraid.content") dataDisks;
+    dataDisks = builtins.listToAttrs (lib.lists.imap0 (i: d: {
+        name = "d${toString i}";
+        value = "/mnt/${d.name}";
+      })
+      dataDisks);
+    exclude = [
+      "*.unrecoverable"
+      "/tmp/"
+      "/lost+found/"
+      "downloads/"
+      "appdata/"
+      "*.!sync"
+      "/.snapshots/"
+    ];
+  };
+
+  environment.persistence."/persist" = {
+    directories = [
+      "/var/snapraid.content"
+    ];
+  };
 }
