@@ -113,6 +113,7 @@ in {
   };
 
   home.packages = with pkgs; [
+    alejandra
     comma
     fd
     jq
