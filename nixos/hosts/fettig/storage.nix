@@ -104,7 +104,7 @@ in {
   };
 
   environment.persistence."/persist" = {
-    directories = [
+    files = [
       "/var/snapraid.content"
     ];
   };
