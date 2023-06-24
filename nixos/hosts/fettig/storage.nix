@@ -24,42 +24,49 @@
   ];
   parityDisks = builtins.filter (d: d.type == "parity") disks;
   dataDisks = builtins.filter (d: d.type == "data") disks;
-  mkParityFs = disks:
-    builtins.listToAttrs (builtins.map (d: {
+  parityFs = builtins.listToAttrs (builtins.map (d: {
+      name = "/mnt/${d.name}";
+      value = {
+        device = "/dev/disk/by-uuid/${d.uuid}";
+        fsType = "xfs";
+      };
+    })
+    parityDisks);
+  dataFs = builtins.listToAttrs (builtins.concatMap (d: [
+      {
+        name = "/mnt/root/${d.name}";
+        value = {
+          device = "/dev/disk/by-uuid/${d.uuid}";
+          fsType = "btrfs";
+        };
+      }
+      {
         name = "/mnt/${d.name}";
         value = {
           device = "/dev/disk/by-uuid/${d.uuid}";
-          fsType = "xfs";
+          fsType = "btrfs";
+          options = ["subvol=data"];
         };
-      })
-      parityDisks);
-  mkDataFs = disks:
-    builtins.listToAttrs (builtins.concatMap (d: [
-        {
-          name = "/mnt/root/${d.name}";
-          value = {
-            device = "/dev/disk/by-uuid/${d.uuid}";
-            fsType = "btrfs";
-          };
-        }
-        {
-          name = "/mnt/${d.name}";
-          value = {
-            device = "/dev/disk/by-uuid/${d.uuid}";
-            fsType = "btrfs";
-            options = ["subvol=data"];
-          };
-        }
-        {
-          name = "/mnt/snapraid-content/${d.name}";
-          value = {
-            device = "/dev/disk/by-uuid/${d.uuid}";
-            fsType = "btrfs";
-            options = ["subvol=content"];
-          };
-        }
-      ])
-      dataDisks);
+      }
+      {
+        name = "/mnt/snapraid-content/${d.name}";
+        value = {
+          device = "/dev/disk/by-uuid/${d.uuid}";
+          fsType = "btrfs";
+          options = ["subvol=content"];
+        };
+      }
+    ])
+    dataDisks);
+  snapperConfigs = builtins.listToAttrs (builtins.map (d: {
+      name = "${d.name}";
+      value = {
+        SUBVOLUME = "/mnt/${d.name}";
+        ALLOW_GROUPS = ["wheel"];
+        SYNC_ACL = true;
+      };
+    })
+    dataDisks);
 in {
   environment.systemPackages = with pkgs; [
     mergerfs
@@ -74,8 +81,8 @@ in {
         options = ["defaults" "nofail" "nonempty" "allow_other" "use_ino" "cache.files=partial" "category.create=mfs" "moveonenospc=true" "dropcacheonclose=true" "minfreespace=100G" "fsname=mergerfs"];
       };
     }
-    // mkParityFs disks
-    // mkDataFs disks;
+    // parityFs
+    // dataFs;
 
   snapraid = {
     enable = true;
@@ -107,5 +114,11 @@ in {
     files = [
       "/var/snapraid.content"
     ];
+  };
+
+  services.snapper = {
+    snapshotInterval = "";
+    cleanupInterval = "";
+    configs = snapperConfigs;
   };
 }
