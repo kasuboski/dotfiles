@@ -115,6 +115,7 @@ in {
   home.packages = with pkgs; [
     alejandra
     comma
+    du-dust
     fd
     jq
     ripgrep
