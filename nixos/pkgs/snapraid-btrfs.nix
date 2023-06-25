@@ -5,7 +5,7 @@
   makeWrapper,
 }: let
   name = "snapraid-btrfs";
-  buildInputs = [];
+  deps = [];
   script =
     (
       writeScriptBin name
@@ -23,7 +23,7 @@
 in
   symlinkJoin {
     inherit name;
-    paths = [script] ++ buildInputs;
+    paths = [script] ++ deps;
     buildInputs = [makeWrapper];
     postBuild = "wrapProgram $out/bin/${name} --prefix PATH : $out/bin";
   }

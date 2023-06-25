@@ -17,6 +17,7 @@
       home-manager.useGlobalPkgs = true;
       home-manager.useUserPackages = true;
     }
+    {nixpkgs.overlays = [(import ../../overlays)];}
     ./storage.nix
     ./cachix.nix
     ./ephemeral.nix

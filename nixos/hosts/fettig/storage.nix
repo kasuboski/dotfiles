@@ -78,7 +78,10 @@
 in {
   environment.systemPackages = with pkgs; [
     mergerfs
-    (callPackage ../../pkgs/snapraid-btrfs.nix {})
+    snapraid-btrfs
+    snapraid-btrfs-runner
+    # (callPackage ../../pkgs/snapraid-btrfs.nix {})
+    # (callPackage ../../pkgs/snapraid-btrfs-runner.nix {})
   ];
 
   fileSystems =
