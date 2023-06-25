@@ -10,7 +10,7 @@
   snapper,
 }: let
   name = "snapraid-btrfs-runner";
-  deps = [python311 config];
+  deps = [python311 config snapraid snapraid-btrfs snapper];
   src = fetchFromGitHub {
     owner = "fmoledina";
     repo = "snapraid-btrfs-runner";
@@ -49,7 +49,7 @@
 
       [logging]
       ; logfile to write to, leave empty to disable
-      file =
+      file = /var/snapraid-btrfs-runner.log
       ; maximum logfile size in KiB, leave empty for infinite
       maxsize = 5000
 
@@ -97,5 +97,5 @@ in
     inherit name;
     paths = [script] ++ deps;
     buildInputs = [makeWrapper python311];
-    postBuild = "wrapProgram $out/bin/${name} --add-flags '-c ${config}/etc/snapraid-btrfs-runner' --prefix PATH : $out/bin";
+    postBuild = "wrapProgram $out/bin/${name} --add-flags '-c ${config}/etc/snapraid-btrfs-runner' --set PATH $out/bin";
   }

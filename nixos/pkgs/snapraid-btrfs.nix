@@ -3,9 +3,13 @@
   fetchFromGitHub,
   writeScriptBin,
   makeWrapper,
+  coreutils,
+  gnugrep,
+  gawk,
+  gnused,
 }: let
   name = "snapraid-btrfs";
-  deps = [];
+  deps = [coreutils gnugrep gawk gnused];
   script =
     (
       writeScriptBin name
@@ -25,5 +29,5 @@ in
     inherit name;
     paths = [script] ++ deps;
     buildInputs = [makeWrapper];
-    postBuild = "wrapProgram $out/bin/${name} --prefix PATH : $out/bin";
+    postBuild = "wrapProgram $out/bin/${name} --set PATH $out/bin";
   }
