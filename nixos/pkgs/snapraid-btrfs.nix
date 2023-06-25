@@ -7,9 +7,11 @@
   gnugrep,
   gawk,
   gnused,
+  snapraid,
+  snapper,
 }: let
   name = "snapraid-btrfs";
-  deps = [coreutils gnugrep gawk gnused];
+  deps = [coreutils gnugrep gawk gnused snapraid snapper];
   script =
     (
       writeScriptBin name
