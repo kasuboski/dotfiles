@@ -127,12 +127,6 @@ in {
     ];
   };
 
-  # environment.persistence."/persist" = {
-  #   files = [
-  #     "/var/snapraid.content"
-  #   ];
-  # };
-
   services.snapper = {
     configs = snapperConfigs;
   };
