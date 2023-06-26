@@ -73,7 +73,7 @@
     dataDisks);
   contentFiles =
     [
-      "/var/snapraid.content"
+      "/persist/var/snapraid.content"
     ]
     ++ builtins.map (d: "/mnt/snapraid-content/${d.name}/snapraid.content") dataDisks;
   parityFiles = builtins.map (p: "/mnt/${p.name}/snapraid.parity") parityDisks;
@@ -127,11 +127,11 @@ in {
     ];
   };
 
-  environment.persistence."/persist" = {
-    files = [
-      "/var/snapraid.content"
-    ];
-  };
+  # environment.persistence."/persist" = {
+  #   files = [
+  #     "/var/snapraid.content"
+  #   ];
+  # };
 
   services.snapper = {
     configs = snapperConfigs;
