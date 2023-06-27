@@ -49,7 +49,7 @@
 
       [logging]
       ; logfile to write to, leave empty to disable
-      file = /var/snapraid-btrfs-runner.log
+      file =
       ; maximum logfile size in KiB, leave empty for infinite
       maxsize = 5000
 
