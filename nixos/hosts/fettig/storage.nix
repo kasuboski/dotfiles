@@ -88,7 +88,7 @@
     dataDisks);
 in {
   imports = [
-    ./nfs.nix
+    ./network-share.nix
   ];
 
   environment.systemPackages = with pkgs; [
