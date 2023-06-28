@@ -87,6 +87,10 @@
     })
     dataDisks);
 in {
+  imports = [
+    ./nfs.nix
+  ];
+
   environment.systemPackages = with pkgs; [
     mergerfs
     snapraid-btrfs
