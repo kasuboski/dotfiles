@@ -49,5 +49,12 @@
         ];
       };
     };
+    homeConfigurations = {
+      "josh@x86" = home-manager.lib.homeManagerConfiguration {
+        modules = [./users/josh/home.nix];
+        pkgs = nixpkgs.legacyPackages.x86_64-linux;
+        extraSpecialArgs = {inherit inputs;};
+      };
+    };
   };
 }
