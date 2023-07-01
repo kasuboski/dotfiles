@@ -36,11 +36,16 @@ in {
       enable = true;
       userName = "Josh Kasuboski";
       userEmail = "josh.kasuboski@gmail.com";
+      ignores = [
+        ".direnv"
+        "result"
+      ];
       extraConfig = {
         init.defaultBranch = "main";
         github.user = "kasuboski";
         color.ui = true;
       };
+      delta.enable = true;
     };
     gh.enable = true;
     bat = {
