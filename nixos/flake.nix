@@ -18,10 +18,12 @@
     vscode-server,
     ...
   } @ inputs: let
-    forEachSystem = nixpkgs.lib.genAttrs ["x86_64-linux" "aarch64-linux"];
+    systems = ["x86_64-linux" "aarch64-linux"];
+    forEachSystem = nixpkgs.lib.genAttrs systems;
     forEachPkgs = f: forEachSystem (sys: f nixpkgs.legacyPackages.${sys});
   in {
     formatter = forEachPkgs (pkgs: pkgs.alejandra);
+    devShells = forEachPkgs (pkgs: import ./shell.nix {inherit pkgs;});
     nixosConfigurations = {
       fettig = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
@@ -49,10 +51,17 @@
         ];
       };
     };
+
     homeConfigurations = {
       "josh@x86" = home-manager.lib.homeManagerConfiguration {
         modules = [./users/josh/home.nix];
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
+        extraSpecialArgs = {inherit inputs;};
+      };
+
+      "josh@aarch64" = home-manager.lib.homeManagerConfiguration {
+        modules = [./users/josh/home.nix];
+        pkgs = nixpkgs.legacyPackages.aarch64-linux;
         extraSpecialArgs = {inherit inputs;};
       };
     };
