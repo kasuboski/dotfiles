@@ -15,6 +15,7 @@
 in {
   imports = [
     inputs.vscode-server.homeModules.default
+    ./kubernetes.nix
   ];
   services.vscode-server.enable = true;
 
@@ -67,9 +68,21 @@ in {
     };
     fish = {
       enable = true;
-      interactiveShellInit = lib.strings.concatStrings (lib.strings.intersperse "\n" [
+      interactiveShellInit = lib.strings.concatStringsSep "\n" [
         "fish_config theme choose CatppuccinMocha"
-      ]);
+      ];
+      shellInit = lib.strings.concatStringsSep "\n" [
+        ''
+          # Nix
+          if test -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.fish'
+            source '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.fish'
+          end
+          # not sure why this isn't happening already
+          fish_add_path -m /run/current-system/sw/bin
+          fish_add_path -m /etc/profiles/per-user/${config.home.username}/bin
+          # End Nix
+        ''
+      ];
       shellAliases = {
         kgpo = "k get pods";
       };
