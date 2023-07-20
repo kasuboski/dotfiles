@@ -7,6 +7,10 @@
 }: let
   isDarwin = pkgs.stdenv.isDarwin;
   isLinux = pkgs.stdenv.isLinux;
+  homePrefix =
+    if isDarwin
+    then "/Users"
+    else "/home";
   manpager = pkgs.writeShellScriptBin "manpager" "sh -c 'col -bx | bat -l man -p'";
 in {
   imports = [
@@ -17,7 +21,7 @@ in {
   home = {
     stateVersion = "23.05";
     username = "josh";
-    homeDirectory = lib.mkDefault "/home/${config.home.username}";
+    homeDirectory = lib.mkDefault "${homePrefix}/${config.home.username}";
   };
 
   home.sessionVariables = {

@@ -6,6 +6,8 @@
     impermanence.url = "github:Nix-community/impermanence";
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    darwin.url = "github:LnL7/nix-darwin";
+    darwin.inputs.nixpkgs.follows = "nixpkgs";
     vscode-server.url = "github:nix-community/nixos-vscode-server";
     vscode-server.inputs.nixpkgs.follows = "nixpkgs";
   };
@@ -15,10 +17,11 @@
     lima,
     impermanence,
     home-manager,
+    darwin,
     vscode-server,
     ...
   } @ inputs: let
-    systems = ["x86_64-linux" "aarch64-linux"];
+    systems = ["x86_64-linux" "aarch64-linux" "x86_64-darwin" "aarch64-darwin"];
     forEachSystem = nixpkgs.lib.genAttrs systems;
     forEachPkgs = f: forEachSystem (sys: f nixpkgs.legacyPackages.${sys});
   in {
@@ -63,6 +66,14 @@
         modules = [./users/josh/home.nix];
         pkgs = nixpkgs.legacyPackages.aarch64-linux;
         extraSpecialArgs = {inherit inputs;};
+      };
+    };
+
+    darwinConfigurations = {
+      "work-mac" = darwin.lib.darwinSystem {
+        system = "x86_64-darwin";
+        specialArgs = {inherit inputs;};
+        modules = [./hosts/work-mac/configuration.nix];
       };
     };
   };
