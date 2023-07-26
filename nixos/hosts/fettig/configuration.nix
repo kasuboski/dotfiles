@@ -21,6 +21,7 @@
     ./storage.nix
     ./cachix.nix
     ./ephemeral.nix
+    ./observability.nix
     ../../users/josh
   ];
 

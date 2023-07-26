@@ -78,8 +78,10 @@ in {
             source '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.fish'
           end
           # not sure why this isn't happening already
-          fish_add_path -m /run/current-system/sw/bin
-          fish_add_path -m /etc/profiles/per-user/${config.home.username}/bin
+          fish_add_path -a /run/current-system/sw/bin
+          fish_add_path -a /etc/profiles/per-user/${config.home.username}/bin
+          # this for sure needs to be first
+          fish_add_path -p /run/wrappers/bin
           # End Nix
         ''
       ];

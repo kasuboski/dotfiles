@@ -14,7 +14,7 @@
         source '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.fish'
       end
       # not sure why this isn't happening already
-      fish_add_path -m /run/current-system/sw/bin
+      fish_add_path -a /run/current-system/sw/bin
       # End Nix
     ''
   ];
