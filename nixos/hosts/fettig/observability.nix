@@ -11,9 +11,12 @@
       sources.journal = {
         type = "journald";
       };
+      sources.host = {
+        type = "host_metrics";
+      };
       sinks.axiom = {
         type = "axiom";
-        inputs = ["journal"];
+        inputs = ["journal" "host"];
         dataset = "journald";
         token = ''''${AXIOM_TOKEN}'';
       };
