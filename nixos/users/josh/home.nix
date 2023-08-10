@@ -129,6 +129,9 @@ in {
         set shiftwidth=2
       '';
     };
+    rtx = {
+      enable = true;
+    };
     starship = {
       enable = true;
       settings = lib.importTOML ../../../dot_config/starship.toml;
@@ -142,6 +145,7 @@ in {
     du-dust
     fd
     jq
+    loft
     ripgrep
     yq
   ];

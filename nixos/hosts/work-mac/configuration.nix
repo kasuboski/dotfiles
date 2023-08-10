@@ -12,6 +12,7 @@
       home-manager.useGlobalPkgs = true;
       home-manager.useUserPackages = true;
     }
+    {nixpkgs.overlays = [(import ../../overlays)];}
     ../../users/josh/darwin.nix
   ];
 
