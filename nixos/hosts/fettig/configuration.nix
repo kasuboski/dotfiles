@@ -63,6 +63,7 @@
     htop
     git
     lm_sensors
+    pipes-rs
   ];
 
   users.mutableUsers = false;
