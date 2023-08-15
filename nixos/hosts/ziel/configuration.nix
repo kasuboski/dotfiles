@@ -15,17 +15,22 @@
     ../common/global
     ../common/optional/ephemeral.nix
     ../../users/josh
+    ./home-assistant.nix
   ];
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.kernelPackages = pkgs.linuxPackages_latest;
 
   networking.hostName = "ziel";
 
   environment.systemPackages = with pkgs; [
     lm_sensors
   ];
+  
+  hardware.bluetooth.enable = true;
+  networking.wireless.enable = true;
 
   users.mutableUsers = false;
 

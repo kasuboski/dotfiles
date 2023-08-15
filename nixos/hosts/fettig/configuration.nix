@@ -12,7 +12,7 @@
     ./hardware-configuration.nix
     inputs.impermanence.nixosModule
     ../common/global
-    ../common/optional/ephemeral.nix 
+    ../common/optional/ephemeral.nix
     ./storage.nix
     ./observability.nix
     ../../users/josh
