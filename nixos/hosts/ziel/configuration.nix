@@ -21,14 +21,23 @@
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelPackages = pkgs.linuxPackages_testing; # need for the intel wifi/BT
+  # https://forums.gentoo.org/viewtopic-t-1163072.html?sid=90dba32692ee2125aa582fe839c53050
+  hardware.firmware = [
+    (
+      pkgs.runCommandNoCC "ibt-0040-1050" {} ''
+        mkdir -p $out/lib/firmware/intel
+        cp ${pkgs.linux-firmware}/lib/firmware/intel/ibt-1040-4150.sfi $out/lib/firmware/intel/ibt-0040-1050.sfi
+      ''
+    )
+  ];
 
   networking.hostName = "ziel";
 
   environment.systemPackages = with pkgs; [
     lm_sensors
   ];
-  
+
   hardware.bluetooth.enable = true;
   networking.wireless.enable = true;
 
