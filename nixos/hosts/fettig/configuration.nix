@@ -11,16 +11,9 @@
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
     inputs.impermanence.nixosModule
-    inputs.home-manager.nixosModules.home-manager
-    {
-      home-manager.extraSpecialArgs = {inherit inputs;};
-      home-manager.useGlobalPkgs = true;
-      home-manager.useUserPackages = true;
-    }
-    {nixpkgs.overlays = [(import ../../overlays)];}
+    ../common/global
+    ../common/optional/ephemeral.nix 
     ./storage.nix
-    ./cachix.nix
-    ./ephemeral.nix
     ./observability.nix
     ../../users/josh
   ];
@@ -37,31 +30,11 @@
 
   # Set your time zone.
   # time.timeZone = "Europe/Amsterdam";
-  nix = {
-    settings = {
-      trusted-users = ["root" "@wheel"];
-      auto-optimise-store = true;
-      experimental-features = ["nix-command" "flakes"];
-      system-features = ["kvm" "nixos-test" "benchmark" "big-parallel"];
-    };
-    gc = {
-      automatic = true;
-      dates = "weekly";
-      options = "--delete-older-than 2d";
-    };
-  };
-
-  security.sudo.wheelNeedsPassword = false;
   boot.kernelModules = ["nct6775"];
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-    wget
-    curl
-    htop
-    git
     lm_sensors
     pipes-rs
   ];
@@ -90,18 +63,6 @@
   services.avahi = {
     enable = true;
     nssmdns = true;
-  };
-
-  services.tailscale = {
-    enable = true;
-  };
-
-  networking.firewall.allowedUDPPorts = [config.services.tailscale.port];
-
-  environment.persistence."/persist" = {
-    directories = [
-      "/var/lib/tailscale"
-    ];
   };
 
   # Open ports in the firewall.
