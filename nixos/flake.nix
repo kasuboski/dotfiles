@@ -53,6 +53,16 @@
           ./hosts/lima/user-config.nix
         ];
       };
+
+      # nix build .#nixosConfigurations.live.config.system.build.isoImage
+      live = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = {inherit inputs;};
+        modules = [
+          ./hosts/live/configuration.nix
+          {isoImage.squashfsCompression = "gzip -Xcompression-level 1";}
+        ];
+      };
     };
 
     homeConfigurations = {
