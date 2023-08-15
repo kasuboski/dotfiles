@@ -3,6 +3,7 @@
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 {
   inputs,
+  outputs,
   config,
   pkgs,
   ...
@@ -13,7 +14,6 @@
     inputs.impermanence.nixosModule
     ../common/global
     ../common/optional/ephemeral.nix
-    {nixpkgs.overlays = [(import ../../overlays)];}
     ../../users/josh
   ];
 

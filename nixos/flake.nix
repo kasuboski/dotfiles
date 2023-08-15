@@ -13,6 +13,7 @@
   };
 
   outputs = {
+    self,
     nixpkgs,
     lima,
     impermanence,
@@ -21,16 +22,18 @@
     vscode-server,
     ...
   } @ inputs: let
+    inherit (self) outputs;
     systems = ["x86_64-linux" "aarch64-linux" "x86_64-darwin" "aarch64-darwin"];
     forEachSystem = nixpkgs.lib.genAttrs systems;
     forEachPkgs = f: forEachSystem (sys: f nixpkgs.legacyPackages.${sys});
   in {
     formatter = forEachPkgs (pkgs: pkgs.alejandra);
     devShells = forEachPkgs (pkgs: import ./shell.nix {inherit pkgs;});
+    overlays = import ./overlays;
     nixosConfigurations = {
       fettig = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        specialArgs = {inherit inputs;};
+        specialArgs = {inherit inputs outputs;};
         modules = [
           ./hosts/fettig/configuration.nix
         ];
@@ -38,7 +41,7 @@
 
       ziel = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        specialArgs = {inherit inputs;};
+        specialArgs = {inherit inputs outputs;};
         modules = [
           ./hosts/ziel/configuration.nix
         ];
@@ -46,7 +49,7 @@
 
       nixos = nixpkgs.lib.nixosSystem {
         system = "aarch64-linux";
-        specialArgs = {inherit inputs;};
+        specialArgs = {inherit inputs outputs;};
         modules = [
           lima.nixosModules.lima
           ./hosts/lima/user-config.nix
@@ -55,7 +58,7 @@
 
       nixosx86 = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        specialArgs = {inherit inputs;};
+        specialArgs = {inherit inputs outputs;};
         modules = [
           lima.nixosModules.lima
           ./hosts/lima/user-config.nix
@@ -65,7 +68,7 @@
       # nix build .#nixosConfigurations.live.config.system.build.isoImage
       live = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        specialArgs = {inherit inputs;};
+        specialArgs = {inherit inputs outputs;};
         modules = [
           ./hosts/live/configuration.nix
           {isoImage.squashfsCompression = "gzip -Xcompression-level 1";}
@@ -77,20 +80,20 @@
       "josh@x86" = home-manager.lib.homeManagerConfiguration {
         modules = [./users/josh/home.nix];
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
-        extraSpecialArgs = {inherit inputs;};
+        extraSpecialArgs = {inherit inputs outputs;};
       };
 
       "josh@aarch64" = home-manager.lib.homeManagerConfiguration {
         modules = [./users/josh/home.nix];
         pkgs = nixpkgs.legacyPackages.aarch64-linux;
-        extraSpecialArgs = {inherit inputs;};
+        extraSpecialArgs = {inherit inputs outputs;};
       };
     };
 
     darwinConfigurations = {
       "work-mac" = darwin.lib.darwinSystem {
         system = "x86_64-darwin";
-        specialArgs = {inherit inputs;};
+        specialArgs = {inherit inputs outputs;};
         modules = [./hosts/work-mac/configuration.nix];
       };
     };

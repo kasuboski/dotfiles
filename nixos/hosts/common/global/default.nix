@@ -1,5 +1,6 @@
 {
   inputs,
+  outputs,
   config,
   pkgs,
   ...
@@ -7,7 +8,7 @@
   imports = [
     inputs.home-manager.nixosModules.home-manager
     {
-      home-manager.extraSpecialArgs = {inherit inputs;};
+      home-manager.extraSpecialArgs = {inherit inputs outputs;};
       home-manager.useGlobalPkgs = true;
       home-manager.useUserPackages = true;
     }
@@ -27,6 +28,8 @@
       options = "--delete-older-than 2d";
     };
   };
+
+  nixpkgs.overlays = [outputs.overlays];
 
   security.sudo.wheelNeedsPassword = false;
 
