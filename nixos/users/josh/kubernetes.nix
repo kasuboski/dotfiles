@@ -4,13 +4,11 @@
   lib,
   pkgs,
   ...
-}: 
-let
+}: let
   resource-capacity = pkgs.writeShellScriptBin "kubectl-resource_capacity" ''
-      exec ${pkgs.kube-capacity}/bin/kube-capacity
-    '';
-in
-{
+    exec ${pkgs.kube-capacity}/bin/kube-capacity
+  '';
+in {
   home.packages = with pkgs; [
     kubectl
     kubecolor

@@ -42,7 +42,7 @@
         modules = [
           ./hosts/ziel/configuration.nix
         ];
-      }; 
+      };
 
       nixos = nixpkgs.lib.nixosSystem {
         system = "aarch64-linux";

@@ -1,12 +1,15 @@
 {
   config,
   pkgs,
+  lib,
   ...
 }: {
   environment.persistence."/persist" = {
-    directories = [
-      "/etc/nixos"
-    ];
+    directories =
+      [
+        "/etc/nixos"
+      ]
+      ++ lib.optional config.services.tailscale.enable "/var/lib/tailscale";
     files = [
       "/etc/machine-id"
       "/etc/ssh/ssh_host_ed25519_key"
