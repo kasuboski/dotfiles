@@ -5,6 +5,19 @@
   services.blocky = {
     enable = true;
     settings = {
+      blocking = {
+        blackLists = {
+          light = [
+            "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/domains/light.txt"
+          ];
+        };
+        clientGroupsBlock = {
+          default = [
+            "light"
+          ];
+        };
+        startStrategy = "fast";
+      };
       upstream = {
         default = [
           "https://cloudflare-dns.com/dns-query"
@@ -32,6 +45,7 @@
         minTime = "5m";
         maxTime = "30m";
       };
+      ports.http = ":4000";
     };
   };
 }
