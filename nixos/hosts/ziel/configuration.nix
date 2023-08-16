@@ -16,6 +16,7 @@
     ../common/optional/ephemeral.nix
     ../../users/josh
     ./home-assistant.nix
+    ./blocky.nix
   ];
 
   # Use the systemd-boot EFI boot loader.
