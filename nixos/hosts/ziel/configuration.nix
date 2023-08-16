@@ -17,6 +17,7 @@
     ../../users/josh
     ./home-assistant.nix
     ./blocky.nix
+    ./monitoring.nix
   ];
 
   # Use the systemd-boot EFI boot loader.
