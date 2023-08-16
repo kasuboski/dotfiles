@@ -18,6 +18,11 @@
         domain = "ziel.lan";
       };
       panels.disable_sanitize_html = true; # needed for blocky start/stop blocking
+      "auth.anonymous" = {
+        enabled = true;
+        org_name = "Main Org.";
+        org_role = "Viewer";
+      };
     };
     provision = {
       enable = true;
