@@ -3,6 +3,13 @@
   "extends": [
     "config:base"
   ],
+  "lockFileMaintenance": {
+    "enabled": true,
+    "extends": ["schedule:weekly"]
+  },
+  "nix": {
+    "enabled": true
+  },
   "regexManagers": [
     {
       "fileMatch": ["^dot_tool-versions.tmpl$"],
