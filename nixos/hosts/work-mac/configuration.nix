@@ -18,8 +18,11 @@
 
   nix = {
     useDaemon = true;
+    linux-builder.enable = true;
+    linux-builder.maxJobs = 4;
     settings = {
       auto-optimise-store = true;
+      trusted-users = ["@admin"];
       experimental-features = ["nix-command" "flakes"];
     };
     gc = {
