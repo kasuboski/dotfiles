@@ -98,14 +98,43 @@
         pkgs = nixpkgs.legacyPackages.aarch64-linux;
         extraSpecialArgs = {inherit inputs outputs;};
       };
+
+      "root@x86" = home-manager.lib.homeManagerConfiguration {
+        modules = [
+          {
+            nixpkgs.overlays = [(import ./overlays)];
+          }
+          ./users/root
+        ];
+        pkgs = nixpkgs.legacyPackages.x86_64-linux;
+        extraSpecialArgs = {inherit inputs outputs;};
+      };
     };
 
-    devContainer = forEachPkgs (pkgs:
+    devContainer = forEachPkgs (pkgs: let
+      lib = pkgs.lib;
+      # https://github.com/LnL7/nix-docker/blob/master/default.nix#L21
+      nixconf = ''
+        build-users-group = nixbld
+        sandbox = false
+      '';
+
+      passwd = ''
+        root:x:0:0::/root:/run/current-system/sw/bin/bash
+        ${lib.concatStringsSep "\n" (lib.genList (i: "nixbld${toString (i + 1)}:x:${toString (i + 30001)}:30000::/var/empty:/run/current-system/sw/bin/nologin") 32)}
+      '';
+
+      group = ''
+        root:x:0:
+        nogroup:x:65534:
+        nixbld:x:30000:${lib.concatStringsSep "," (lib.genList (i: "nixbld${toString (i + 1)}") 32)}
+      '';
+    in
       pkgs.dockerTools.buildLayeredImage {
         name = "josh-dev";
         contents = [
           pkgs.cacert
-          pkgs.yash
+          pkgs.bash
           pkgs.coreutils
           pkgs.home-manager
           pkgs.nix
@@ -117,8 +146,15 @@
             mkdir $out
             mkdir $out/tmp
             mkdir -p $out/nix/var/nix/profiles/per-user/root
+            mkdir -p $out/etc/nix
+            echo '${nixconf}' > $out/etc/nix/nix.conf
+            echo '${passwd}' > $out/etc/passwd
+            echo '${group}' > $out/etc/group
           '')
         ];
+        fakeRootCommands = ''
+          chmod 1777 ./tmp
+        '';
         config = {
           Cmd = ["${pkgs.yash}/bin/yash"];
           Env = [
