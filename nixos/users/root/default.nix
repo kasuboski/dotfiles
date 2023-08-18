@@ -9,4 +9,5 @@
   ];
 
   home.username = lib.mkForce "root";
+  home.directory = "/root";
 }
