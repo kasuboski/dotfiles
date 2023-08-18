@@ -78,17 +78,56 @@
 
     homeConfigurations = {
       "josh@x86" = home-manager.lib.homeManagerConfiguration {
-        modules = [./users/josh/home.nix];
+        modules = [
+          {
+            nixpkgs.overlays = [(import ./overlays)];
+          }
+          ./users/josh/home.nix
+        ];
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
         extraSpecialArgs = {inherit inputs outputs;};
       };
 
       "josh@aarch64" = home-manager.lib.homeManagerConfiguration {
-        modules = [./users/josh/home.nix];
+        modules = [
+          {
+            nixpkgs.overlays = [(import ./overlays)];
+          }
+          ./users/josh/home.nix
+        ];
         pkgs = nixpkgs.legacyPackages.aarch64-linux;
         extraSpecialArgs = {inherit inputs outputs;};
       };
     };
+
+    devContainer = forEachPkgs (pkgs:
+      pkgs.dockerTools.buildLayeredImage {
+        name = "josh-dev";
+        contents = [
+          pkgs.cacert
+          pkgs.yash
+          pkgs.coreutils
+          pkgs.home-manager
+          pkgs.nix
+          pkgs.git
+          pkgs.vim
+          pkgs.curl
+          pkgs.openssl
+          (pkgs.runCommand "extraDirs" {} ''
+            mkdir $out
+            mkdir $out/tmp
+            mkdir -p $out/nix/var/nix/profiles/per-user/root
+          '')
+        ];
+        config = {
+          Cmd = ["${pkgs.yash}/bin/yash"];
+          Env = [
+            "USER=root"
+            "NIX_CONFIG=extra-experimental-features = nix-command flakes"
+            "SSL_CERT_FILE=/etc/ssl/certs/ca-bundle.crt"
+          ];
+        };
+      });
 
     darwinConfigurations = {
       "work-mac" = darwin.lib.darwinSystem {
