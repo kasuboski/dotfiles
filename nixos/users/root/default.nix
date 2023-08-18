@@ -1,11 +1,12 @@
 {
   pkgs,
   config,
+  lib,
   ...
 }: {
   imports = [
     ../josh/home.nix
   ];
 
-  home.username = "root";
+  home.username = lib.mkForce "root";
 }
