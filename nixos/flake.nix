@@ -117,6 +117,7 @@
       nixconf = ''
         build-users-group = nixbld
         sandbox = false
+        extra-experimental-features = nix-command flakes
       '';
 
       passwd = ''
@@ -145,7 +146,8 @@
           (pkgs.runCommand "extraDirs" {} ''
             mkdir $out
             mkdir $out/tmp
-            mkdir -p $out/nix/var/nix/profiles/per-user/root
+            mkdir -p $out/root
+            mkdir -p $out/nix/var/nix/profiles/default
             mkdir -p $out/etc/nix
             echo '${nixconf}' > $out/etc/nix/nix.conf
             echo '${passwd}' > $out/etc/passwd
