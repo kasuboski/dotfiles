@@ -11,7 +11,8 @@
       ]
       ++ lib.optional config.services.tailscale.enable "/var/lib/tailscale"
       ++ lib.optional config.services.prometheus.enable "/var/lib/${config.services.prometheus.stateDir}"
-      ++ lib.optional config.services.grafana.enable config.services.grafana.dataDir;
+      ++ lib.optional config.services.grafana.enable config.services.grafana.dataDir
+      ++ lib.optional config.services.samba.enable "/var/lib/samba";
     files = [
       "/etc/machine-id"
       "/etc/ssh/ssh_host_ed25519_key"
