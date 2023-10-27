@@ -15,6 +15,7 @@
     ../common/optional/ephemeral.nix
     ./storage.nix
     ./observability.nix
+    ./k3s.nix
     ../../users/josh
   ];
 
