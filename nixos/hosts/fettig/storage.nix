@@ -99,11 +99,6 @@ in {
 
   fileSystems =
     {
-      "/mnt/speicher" = {
-        device = "192.168.86.120:/speicher";
-        fsType = "nfs";
-        options = ["x-systemd.automount" "noauto"];
-      };
       "/mnt/storage" = {
         #/mnt/disk* /mnt/storage fuse.mergerfs defaults,nonempty,allow_other,use_ino,cache.files=partial,moveonenospc=true,dropcacheonclose=true,minfreespace=100G,fsname=mergerfs 0 0
         device = lib.strings.concatMapStringsSep ":" (d: "/mnt/${d.name}") dataDisks;

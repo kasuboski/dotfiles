@@ -56,7 +56,7 @@ in {
     bat = {
       enable = true;
       themes = {
-        catppuccinMocha = builtins.readFile ../../../dot_config/bat/themes/Catppuccin-mocha.tmTheme;
+        catppuccinMocha = {src = ../../../dot_config/bat/themes/Catppuccin-mocha.tmTheme;};
       };
       config = {
         theme = "catppuccinMocha";
