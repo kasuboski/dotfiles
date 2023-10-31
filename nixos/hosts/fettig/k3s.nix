@@ -10,7 +10,7 @@
       "/var/lib/plex"
     ];
   };
-  networking.firewall.allowedTCPPorts = [6443];
+  networking.firewall.allowedTCPPorts = [6443 32400];
   services.k3s = {
     enable = true;
     # https://github.com/NixOS/nixpkgs/pull/263780
