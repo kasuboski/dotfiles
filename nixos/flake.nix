@@ -173,6 +173,11 @@
         specialArgs = {inherit inputs outputs;};
         modules = [./hosts/work-mac/configuration.nix];
       };
+      "personal-mac" = darwin.lib.darwinSystem {
+        system = "aarch64-darwin";
+        specialArgs = {inherit inputs outputs;};
+        modules = [./hosts/personal-mac/configuration.nix];
+      };
     };
   };
 }
