@@ -5,7 +5,7 @@
   pkgs,
   ...
 }: {
-  home.programs = {
+  programs = {
     mise.enable = true;
   };
   home.packages = with pkgs; [

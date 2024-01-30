@@ -14,6 +14,7 @@
     }
     {nixpkgs.overlays = [(import ../../overlays)];}
     ../../users/josh/darwin.nix
+    {home-manager.users.josh = import ../../users/josh/work.nix;}
   ];
 
   nix = {
