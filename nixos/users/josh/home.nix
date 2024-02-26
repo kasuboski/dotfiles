@@ -70,6 +70,7 @@ in {
       enable = true;
       interactiveShellInit = lib.strings.concatStringsSep "\n" [
         "fish_config theme choose CatppuccinMocha"
+        (lib.strings.optionalString isDarwin "fish_add_path '/Applications/Visual Studio Code.app/Contents/Resources/app/bin'")
       ];
       shellInit = lib.strings.concatStringsSep "\n" [
         ''

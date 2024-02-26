@@ -15,6 +15,7 @@
       end
       # not sure why this isn't happening already
       fish_add_path -a /run/current-system/sw/bin
+      fish_add_path -a /Applications/Visual Studio Code.app/Contents/Resources/app/bin
       # End Nix
     ''
   ];
