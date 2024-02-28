@@ -14,6 +14,7 @@
 in {
   imports = [
     inputs.vscode-server.homeModules.default
+    inputs.nixvim.homeManagerModules.nixvim
     ./kubernetes.nix
   ];
   services.vscode-server.enable = true;
@@ -28,6 +29,7 @@ in {
     LANG = "en_US.UTF-8";
     LC_CTYPE = "en_US.UTF-8";
     LC_ALL = "en_US.UTF-8";
+    EDITOR = "vim";
   };
 
   xdg.enable = true;
@@ -86,6 +88,8 @@ in {
       ];
       shellAliases = {
         kgpo = "k get pods";
+        vim = "nvim";
+        vi = "nvim";
       };
       functions =
         {
@@ -116,17 +120,22 @@ in {
       enable = true;
       enableAliases = true;
     };
-    neovim = {
+    nixvim = {
       enable = true;
-      defaultEditor = true;
-      viAlias = true;
-      vimAlias = true;
-      extraConfig = ''
-        set number
-        set expandtab
-        set tabstop=2
-        set shiftwidth=2
-      '';
+      options = {
+        number = true;
+        expandtab = true;
+        tabstop = 2;
+        shiftwidth = 2;
+      };
+      colorschemes.catppuccin = {
+        enable = true;
+        flavour = "mocha";
+      };
+      plugins = {
+        direnv.enable = true;
+        nix.enable = true;
+      };
     };
     starship = {
       enable = true;
