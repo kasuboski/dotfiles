@@ -11,7 +11,6 @@
     if isDarwin
     then "/Users"
     else "/home";
-  manpager = pkgs.writeShellScriptBin "manpager" "sh -c 'col -bx | bat -l man -p'";
 in {
   imports = [
     inputs.vscode-server.homeModules.default
@@ -29,7 +28,6 @@ in {
     LANG = "en_US.UTF-8";
     LC_CTYPE = "en_US.UTF-8";
     LC_ALL = "en_US.UTF-8";
-    MANPAGER = "${manpager}/bin/manpager";
   };
 
   xdg.enable = true;
@@ -134,6 +132,7 @@ in {
       enable = true;
       settings = lib.importTOML ../../../dot_config/starship.toml;
     };
+    tealdeer.enable = true;
     zoxide.enable = true;
   };
 
