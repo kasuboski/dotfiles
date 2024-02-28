@@ -17,7 +17,7 @@ in {
     inputs.nixvim.homeManagerModules.nixvim
     ./kubernetes.nix
   ];
-  services.vscode-server.enable = true;
+  services.vscode-server.enable = isLinux;
 
   home = {
     stateVersion = "23.05";
@@ -133,8 +133,17 @@ in {
         flavour = "mocha";
       };
       plugins = {
+        airline = {
+          enable = true;
+          theme = "catppuccin";
+        };
+        chadtree.enable = true;
+        coq-nvim.enable = true;
         direnv.enable = true;
+        lsp.enable = true;
         nix.enable = true;
+        rainbow-delimiters.enable = true;
+        treesitter.enable = true;
       };
     };
     starship = {
