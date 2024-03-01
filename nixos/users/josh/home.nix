@@ -140,9 +140,28 @@ in {
         chadtree.enable = true;
         coq-nvim.enable = true;
         direnv.enable = true;
-        lsp.enable = true;
+        lsp = {
+          enable = true;
+          servers = {
+            rust-analyzer = {
+              enable = true;
+              installCargo = false;
+              installRustc = false;
+            };
+          };
+        };
         nix.enable = true;
+        nvim-cmp = {
+          enable = true;
+          autoEnableSources = true;
+          sources = [
+            {name = "nvim_lsp";}
+            {name = "path";}
+            {name = "buffer";}
+          ];
+        };
         rainbow-delimiters.enable = true;
+        telescope.enable = true;
         treesitter.enable = true;
       };
     };
