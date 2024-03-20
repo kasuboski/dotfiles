@@ -10,7 +10,8 @@
       "/var/lib/plex"
     ];
   };
-  networking.firewall.allowedTCPPorts = [6443 32400];
+  # networking.firewall.allowedTCPPorts = [6443 32400];
+  networking.firewall.enable = false;
   services.k3s = {
     enable = true;
     # https://github.com/NixOS/nixpkgs/pull/263780
@@ -21,6 +22,7 @@
     serverAddr = "https://k3s-api.home.joshcorp.co:6443";
     tokenFile = "/etc/rancher/k3s/token";
     extraFlags = lib.strings.concatStringsSep " " [
+      "--node-ip 100.107.144.96"
       "--node-label topology.kubernetes.io/region=home"
       "--node-label topology.kubernetes.io/zone=austin"
     ];
