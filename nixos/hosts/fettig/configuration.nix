@@ -16,6 +16,7 @@
     ./storage.nix
     ./observability.nix
     ./k3s.nix
+    ./upload.nix
     ../../users/josh
   ];
 
