@@ -109,7 +109,7 @@ in {
     // parityFs
     // dataFs;
 
-  snapraid = {
+  services.snapraid = {
     inherit contentFiles parityFiles;
     enable = true;
     sync.interval = "";
