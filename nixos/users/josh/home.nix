@@ -90,6 +90,7 @@ in {
         kgpo = "k get pods";
         vim = "nvim";
         vi = "nvim";
+        watch = "hwatch -c";
       };
       functions =
         {
@@ -178,6 +179,7 @@ in {
     comma
     du-dust
     fd
+    hwatch
     jq
     ripgrep
     yq
