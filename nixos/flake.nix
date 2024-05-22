@@ -12,6 +12,8 @@
     vscode-server.inputs.nixpkgs.follows = "nixpkgs";
     nixvim.url = "github:nix-community/nixvim";
     nixvim.inputs.nixpkgs.follows = "nixpkgs";
+    nix2container.url = "github:nlewo/nix2container";
+    nix2container.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = {
@@ -22,6 +24,7 @@
     home-manager,
     darwin,
     vscode-server,
+    nix2container,
     ...
   } @ inputs: let
     inherit (self) outputs;
@@ -113,61 +116,9 @@
       };
     };
 
-    devContainer = forEachPkgs (pkgs: let
-      lib = pkgs.lib;
-      # https://github.com/LnL7/nix-docker/blob/master/default.nix#L21
-      nixconf = ''
-        build-users-group = nixbld
-        sandbox = false
-        extra-experimental-features = nix-command flakes
-      '';
-
-      passwd = ''
-        root:x:0:0::/root:/run/current-system/sw/bin/bash
-        ${lib.concatStringsSep "\n" (lib.genList (i: "nixbld${toString (i + 1)}:x:${toString (i + 30001)}:30000::/var/empty:/run/current-system/sw/bin/nologin") 32)}
-      '';
-
-      group = ''
-        root:x:0:
-        nogroup:x:65534:
-        nixbld:x:30000:${lib.concatStringsSep "," (lib.genList (i: "nixbld${toString (i + 1)}") 32)}
-      '';
-    in
-      pkgs.dockerTools.buildLayeredImage {
-        name = "josh-dev";
-        contents = [
-          pkgs.cacert
-          pkgs.bash
-          pkgs.coreutils
-          pkgs.home-manager
-          pkgs.nix
-          pkgs.git
-          pkgs.vim
-          pkgs.curl
-          pkgs.openssl
-          (pkgs.runCommand "extraDirs" {} ''
-            mkdir $out
-            mkdir $out/tmp
-            mkdir -p $out/root
-            mkdir -p $out/nix/var/nix/profiles/default
-            mkdir -p $out/etc/nix
-            echo '${nixconf}' > $out/etc/nix/nix.conf
-            echo '${passwd}' > $out/etc/passwd
-            echo '${group}' > $out/etc/group
-          '')
-        ];
-        fakeRootCommands = ''
-          chmod 1777 ./tmp
-        '';
-        config = {
-          Cmd = ["${pkgs.yash}/bin/yash"];
-          Env = [
-            "USER=root"
-            "NIX_CONFIG=extra-experimental-features = nix-command flakes"
-            "SSL_CERT_FILE=/etc/ssl/certs/ca-bundle.crt"
-          ];
-        };
-      });
+    packages = forEachPkgs (pkgs: {
+      devContainer = import ./devcontainer.nix {inherit pkgs nix2container;};
+    });
 
     darwinConfigurations = {
       "work-mac" = darwin.lib.darwinSystem {
