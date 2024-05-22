@@ -155,7 +155,7 @@ in {
         cmp = {
           enable = true;
           autoEnableSources = true;
-          extraOptions.sources = [
+          settings.sources = [
             {name = "nvim_lsp";}
             {name = "path";}
             {name = "buffer";}

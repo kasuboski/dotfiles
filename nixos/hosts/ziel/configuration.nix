@@ -18,7 +18,10 @@
     ./home-assistant.nix
     ./blocky.nix
     ./monitoring.nix
+    ./vscode-server.nix
   ];
+
+  nixpkgs.config.allowUnfree = true;
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
