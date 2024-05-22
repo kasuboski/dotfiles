@@ -123,7 +123,7 @@ in {
     };
     nixvim = {
       enable = true;
-      options = {
+      opts = {
         number = true;
         expandtab = true;
         tabstop = 2;
@@ -131,12 +131,12 @@ in {
       };
       colorschemes.catppuccin = {
         enable = true;
-        flavour = "mocha";
+        settings.flavour = "mocha";
       };
       plugins = {
         airline = {
           enable = true;
-          theme = "catppuccin";
+          settings.theme = "catppuccin";
         };
         chadtree.enable = true;
         coq-nvim.enable = true;
@@ -152,10 +152,10 @@ in {
           };
         };
         nix.enable = true;
-        nvim-cmp = {
+        cmp = {
           enable = true;
           autoEnableSources = true;
-          sources = [
+          extraOptions.sources = [
             {name = "nvim_lsp";}
             {name = "path";}
             {name = "buffer";}
