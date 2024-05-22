@@ -14,10 +14,7 @@
   networking.firewall.enable = false;
   services.k3s = {
     enable = true;
-    # https://github.com/NixOS/nixpkgs/pull/263780
-    package = pkgs.k3s.override {
-      buildGoModule = pkgs.buildGo120Module;
-    };
+    package = pkgs.k3s_1_27;
     role = "agent";
     serverAddr = "https://k3s-api.home.joshcorp.co:6443";
     tokenFile = "/etc/rancher/k3s/token";
