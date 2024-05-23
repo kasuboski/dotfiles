@@ -15,8 +15,7 @@
     nogroup:x:65534:
     nixbld:x:30000:${lib.concatStringsSep "," (lib.genList (i: "nixbld${toString (i + 1)}") 32)}
   '';
-in
-  nix2containerPkgs.nix2container.buildImage {
+  nixcontainer = nix2containerPkgs.nix2container.buildImage {
     name = "bash";
     initializeNixDatabase = true;
     copyToRoot = [
@@ -52,4 +51,13 @@ in
         "SSL_CERT_FILE=/etc/ssl/certs/ca-bundle.crt"
       ];
     };
-  }
+  };
+  dockerfile = pkgs.writeText "Dockerfile" ''
+    FROM ${nixcontainer.imageName}:${nixcontainer.imageTag}
+    RUN home-manager-install
+  '';
+in
+  pkgs.writeShellScriptBin "buildImage" ''
+    ${nixcontainer.copyToDockerDaemon}
+    docker build -f ${dockerfile} -t dev:latest .
+  ''

@@ -10,3 +10,5 @@ For `nix-darwin` after installing nix I needed `NIX_CONFIG="extra-experimental-f
 
 Linux with `nix` installed - `nix run home-manager/master -- switch --flake github:kasuboski/dotfiles?dir=nixos#josh@x86`
 
+There's a devContainer package that will build an image (assumes docker) with the dotfiles setup for root. `nix run .#devContainer`
+
