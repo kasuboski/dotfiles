@@ -54,7 +54,7 @@
   };
   dockerfile = pkgs.writeText "Dockerfile" ''
     FROM ${nixcontainer.imageName}:${nixcontainer.imageTag}
-    RUN home-manager-install
+    RUN home-manager-install && nix-store --gc
   '';
 in
   pkgs.writeShellScriptBin "buildImage" ''
