@@ -3,7 +3,7 @@
   nix2container,
 }: let
   system = pkgs.system;
-  nix2containerPkgs = nix2container.packages.${system};
+  nix2containerpkgs = nix2container.packages.${system};
 
   lib = pkgs.lib;
   passwd = ''
@@ -15,7 +15,7 @@
     nogroup:x:65534:
     nixbld:x:30000:${lib.concatStringsSep "," (lib.genList (i: "nixbld${toString (i + 1)}") 32)}
   '';
-  nixcontainer = nix2containerPkgs.nix2container.buildImage {
+  nixcontainer = nix2containerpkgs.nix2container.buildImage {
     name = "bash";
     initializeNixDatabase = true;
     copyToRoot = [
@@ -25,7 +25,7 @@
       # in both / and /nix/store.
       (pkgs.buildEnv {
         name = "root";
-        paths = [pkgs.bashInteractive pkgs.coreutils pkgs.nix pkgs.cacert pkgs.home-manager];
+        paths = [pkgs.bashInteractive pkgs.coreutils pkgs.nix pkgs.cacert pkgs.home-manager pkgs.git];
         pathsToLink = ["/bin" "/etc/ssl" "/tmp"];
       })
       (pkgs.runCommand "extraDirs" {} ''
@@ -38,11 +38,12 @@
         echo 'export PATH=/root/.nix-profile/bin:$PATH' > $out/root/.bashrc
 
       '')
+      # #github:kasuboski/dotfiles?dir=nixos#root@x86
       (pkgs.writeShellScriptBin "home-manager-install" ''
-        ${pkgs.home-manager}/bin/home-manager switch --flake github:kasuboski/dotfiles?dir=nixos#root@x86
+        ${pkgs.home-manager}/bin/home-manager switch --flake .#root@x86
       '')
     ];
-    maxLayers = 10;
+    maxLayers = 100;
     config = {
       Cmd = ["/bin/bash"];
       Env = [
@@ -54,10 +55,13 @@
   };
   dockerfile = pkgs.writeText "Dockerfile" ''
     FROM ${nixcontainer.imageName}:${nixcontainer.imageTag}
+    WORKDIR /root/flake
+    COPY . .
+    WORKDIR /root/flake/nixos
     RUN home-manager-install && nix-store --gc
   '';
 in
   pkgs.writeShellScriptBin "buildImage" ''
-    ${nixcontainer.copyToDockerDaemon}
-    docker build -f ${dockerfile} -t dev:latest .
+    ${nixcontainer.copyToDockerDaemon}/bin/copy-to-docker-daemon
+    docker build -f ${dockerfile} -t dev:latest ../.
   ''

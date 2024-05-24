@@ -26,6 +26,7 @@ in {
   };
 
   home.sessionVariables = {
+    LOCALE_ARCHIVE_2_27 = lib.mkForce "${pkgs.glibcLocalesUtf8}/lib/locale/locale-archive";
     LANG = "en_US.UTF-8";
     LC_CTYPE = "en_US.UTF-8";
     LC_ALL = "en_US.UTF-8";
