@@ -13,6 +13,7 @@
     else "/home";
 in {
   imports = [
+    inputs.mac-app-util.homeManagerModules.default
     inputs.vscode-server.homeModules.default
     inputs.nixvim.homeManagerModules.nixvim
     ./kubernetes.nix
@@ -25,155 +26,178 @@ in {
     homeDirectory = lib.mkDefault "${homePrefix}/${config.home.username}";
   };
 
-  home.sessionVariables = {
-    LOCALE_ARCHIVE_2_27 = lib.mkForce "${pkgs.glibcLocalesUtf8}/lib/locale/locale-archive";
-    LANG = "en_US.UTF-8";
-    LC_CTYPE = "en_US.UTF-8";
-    LC_ALL = "en_US.UTF-8";
-    EDITOR = "vim";
-  };
+  home.sessionVariables =
+    {
+      LANG = "en_US.UTF-8";
+      LC_CTYPE = "en_US.UTF-8";
+      LC_ALL = "en_US.UTF-8";
+      EDITOR = "vim";
+    }
+    // (lib.optionalAttrs isLinux {
+      LOCALE_ARCHIVE_2_27 = lib.mkForce "${pkgs.glibcLocalesUtf8}/lib/locale/locale-archive";
+    });
 
   xdg.enable = true;
   xdg.configFile."fish/themes/CatppuccinMocha.theme".source = ../../../dot_config/private_fish/themes/CatppuccinMocha.theme;
 
-  programs = {
-    home-manager.enable = true;
-    git = {
-      enable = true;
-      userName = "Josh Kasuboski";
-      userEmail = "josh.kasuboski@gmail.com";
-      ignores = [
-        ".direnv"
-        "result"
-      ];
-      extraConfig = {
-        init.defaultBranch = "main";
-        github.user = "kasuboski";
-        color.ui = true;
-      };
-      delta.enable = true;
-    };
-    gh.enable = true;
-    bat = {
-      enable = true;
-      themes = {
-        catppuccinMocha = {src = ../../../dot_config/bat/themes/Catppuccin-mocha.tmTheme;};
-      };
-      config = {
-        theme = "catppuccinMocha";
-      };
-    };
-    direnv = {
-      enable = true;
-      nix-direnv.enable = true;
-    };
-    fish = {
-      enable = true;
-      interactiveShellInit = lib.strings.concatStringsSep "\n" [
-        "fish_config theme choose CatppuccinMocha"
-        (lib.strings.optionalString isDarwin "fish_add_path '/Applications/Visual Studio Code.app/Contents/Resources/app/bin'")
-      ];
-      shellInit = lib.strings.concatStringsSep "\n" [
-        ''
-          # Nix
-          if test -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.fish'
-            source '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.fish'
-          end
-          # not sure why this isn't happening already
-          fish_add_path -a /run/current-system/sw/bin
-          fish_add_path -a /etc/profiles/per-user/${config.home.username}/bin
-          # this for sure needs to be first
-          fish_add_path -p /run/wrappers/bin
-          # End Nix
-        ''
-      ];
-      shellAliases = {
-        kgpo = "k get pods";
-        vim = "nvim";
-        vi = "nvim";
-        watch = "hwatch -c";
-      };
-      functions =
-        {
-          k = {
-            wraps = "kubectl";
-            description = "alias kubectl";
-            body = ''
-              if type -q kubecolor
-                kubecolor $argv
-              else
-                kubectl $argv
-              end
-            '';
-          };
-          help = {
-            description = "send command help info to bat";
-            body = ''
-              $argv --help 2>&1 | bat -l help -p
-            '';
-          };
-        }
-        // (lib.optionalAttrs isDarwin {
-          flush_dns = "sudo dscacheutil -flushcache;sudo killall -HUP mDNSResponder";
-        });
-    };
-    fzf.enable = true;
-    lsd = {
-      enable = true;
-      enableAliases = true;
-    };
-    nixvim = {
-      enable = true;
-      opts = {
-        number = true;
-        expandtab = true;
-        tabstop = 2;
-        shiftwidth = 2;
-      };
-      colorschemes.catppuccin = {
+  programs =
+    {
+      home-manager.enable = true;
+      git = {
         enable = true;
-        settings.flavour = "mocha";
-      };
-      plugins = {
-        airline = {
-          enable = true;
-          settings.theme = "catppuccin";
+        userName = "Josh Kasuboski";
+        userEmail = "josh.kasuboski@gmail.com";
+        ignores = [
+          ".direnv"
+          "result"
+        ];
+        extraConfig = {
+          init.defaultBranch = "main";
+          github.user = "kasuboski";
+          color.ui = true;
         };
-        chadtree.enable = true;
-        coq-nvim.enable = true;
-        direnv.enable = true;
-        lsp = {
+        delta.enable = true;
+      };
+      gh.enable = true;
+      bat = {
+        enable = true;
+        themes = {
+          catppuccinMocha = {src = ../../../dot_config/bat/themes/Catppuccin-mocha.tmTheme;};
+        };
+        config = {
+          theme = "catppuccinMocha";
+        };
+      };
+      direnv = {
+        enable = true;
+        nix-direnv.enable = true;
+      };
+      fish = {
+        enable = true;
+        interactiveShellInit = lib.strings.concatStringsSep "\n" [
+          "fish_config theme choose CatppuccinMocha"
+          (lib.strings.optionalString isDarwin "fish_add_path '/Applications/Visual Studio Code.app/Contents/Resources/app/bin'")
+        ];
+        shellInit = lib.strings.concatStringsSep "\n" [
+          ''
+            # Nix
+            if test -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.fish'
+              source '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.fish'
+            end
+            # not sure why this isn't happening already
+            fish_add_path -a /run/current-system/sw/bin
+            fish_add_path -a /etc/profiles/per-user/${config.home.username}/bin
+            # this for sure needs to be first
+            fish_add_path -p /run/wrappers/bin
+            # End Nix
+          ''
+        ];
+        shellAliases = {
+          kgpo = "k get pods";
+          vim = "nvim";
+          vi = "nvim";
+          watch = "hwatch -c";
+        };
+        functions =
+          {
+            k = {
+              wraps = "kubectl";
+              description = "alias kubectl";
+              body = ''
+                if type -q kubecolor
+                  kubecolor $argv
+                else
+                  kubectl $argv
+                end
+              '';
+            };
+            help = {
+              description = "send command help info to bat";
+              body = ''
+                $argv --help 2>&1 | bat -l help -p
+              '';
+            };
+          }
+          // (lib.optionalAttrs isDarwin {
+            flush_dns = "sudo dscacheutil -flushcache;sudo killall -HUP mDNSResponder";
+          });
+      };
+      fzf.enable = true;
+      lsd = {
+        enable = true;
+        enableAliases = true;
+      };
+      nixvim = {
+        enable = true;
+        opts = {
+          number = true;
+          expandtab = true;
+          tabstop = 2;
+          shiftwidth = 2;
+        };
+        colorschemes.catppuccin = {
           enable = true;
-          servers = {
-            rust-analyzer = {
-              enable = true;
-              installCargo = false;
-              installRustc = false;
+          settings.flavour = "mocha";
+        };
+        plugins = {
+          airline = {
+            enable = true;
+            settings.theme = "catppuccin";
+          };
+          chadtree.enable = true;
+          coq-nvim.enable = true;
+          direnv.enable = true;
+          lsp = {
+            enable = true;
+            servers = {
+              rust-analyzer = {
+                enable = true;
+                installCargo = false;
+                installRustc = false;
+              };
             };
           };
+          nix.enable = true;
+          cmp = {
+            enable = true;
+            autoEnableSources = true;
+            settings.sources = [
+              {name = "nvim_lsp";}
+              {name = "path";}
+              {name = "buffer";}
+            ];
+          };
+          rainbow-delimiters.enable = true;
+          telescope.enable = true;
+          treesitter.enable = true;
         };
-        nix.enable = true;
-        cmp = {
-          enable = true;
-          autoEnableSources = true;
-          settings.sources = [
-            {name = "nvim_lsp";}
-            {name = "path";}
-            {name = "buffer";}
-          ];
-        };
-        rainbow-delimiters.enable = true;
-        telescope.enable = true;
-        treesitter.enable = true;
       };
-    };
-    starship = {
-      enable = true;
-      settings = lib.importTOML ../../../dot_config/starship.toml;
-    };
-    tealdeer.enable = true;
-    zoxide.enable = true;
-  };
+      starship = {
+        enable = true;
+        settings = lib.importTOML ../../../dot_config/starship.toml;
+      };
+      tealdeer.enable = true;
+      zoxide.enable = true;
+    }
+    // (lib.optionalAttrs isDarwin {
+      alacritty = {
+        enable = true;
+        settings = {
+          import = ["${pkgs.alacritty-theme}/catppuccin_mocha.toml"];
+          window = {
+            padding = { x = 10; y = 10; };
+          };
+          font = {
+            normal = {
+              family = "FiraCode Nerd Font";
+              style = "Retina";
+            };
+            size = 13.0;
+            offset = { x = 1; };
+          };
+        };
+      };
+    });
 
   home.packages = with pkgs; [
     alejandra

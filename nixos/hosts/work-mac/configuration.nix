@@ -6,6 +6,7 @@
   ...
 }: {
   imports = [
+    inputs.mac-app-util.darwinModules.default
     inputs.home-manager.darwinModules.home-manager
     {
       home-manager.extraSpecialArgs = {inherit inputs;};
