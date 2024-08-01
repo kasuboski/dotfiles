@@ -193,7 +193,6 @@ in {
               style = "Retina";
             };
             size = 13.0;
-            offset = { x = 1; };
           };
         };
       };
