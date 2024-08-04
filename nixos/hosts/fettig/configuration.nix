@@ -15,10 +15,12 @@
     ../common/optional/ephemeral.nix
     ./storage.nix
     ./observability.nix
-    ./k3s.nix
+    ./plex.nix
     ./upload.nix
     ../../users/josh
   ];
+
+  nixpkgs.config.allowUnfree = true;
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
