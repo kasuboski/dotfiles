@@ -185,7 +185,10 @@ in {
         settings = {
           import = ["${pkgs.alacritty-theme}/catppuccin_mocha.toml"];
           window = {
-            padding = { x = 10; y = 10; };
+            padding = {
+              x = 10;
+              y = 10;
+            };
           };
           font = {
             normal = {

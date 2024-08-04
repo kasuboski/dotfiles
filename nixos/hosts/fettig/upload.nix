@@ -23,6 +23,8 @@
     ];
   };
 
+  networking.firewall.allowedTCPPorts = [8080];
+
   systemd.services.miniserve = {
     enable = true;
     wants = ["network-online.target"];
