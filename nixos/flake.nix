@@ -9,6 +9,7 @@
     darwin.url = "github:LnL7/nix-darwin";
     darwin.inputs.nixpkgs.follows = "nixpkgs";
     mac-app-util.url = "github:hraban/mac-app-util";
+    mac-app-util.inputs.nixpkgs.follows = "nixpkgs";
     vscode-server.url = "github:nix-community/nixos-vscode-server";
     vscode-server.inputs.nixpkgs.follows = "nixpkgs";
     nixvim.url = "github:nix-community/nixvim";
@@ -83,40 +84,39 @@
       };
     };
 
-    homeConfigurations = {
-      "josh@x86" = home-manager.lib.homeManagerConfiguration {
-        modules = [
-          {
-            nixpkgs.overlays = [(import ./overlays)];
-          }
-          ./users/josh/home.nix
-        ];
-        pkgs = nixpkgs.legacyPackages.x86_64-linux;
-        extraSpecialArgs = {inherit inputs outputs;};
-      };
+    homeConfigurations = let
+      lib = nixpkgs.lib;
+      users = ["josh" "root" "ubuntu"];
+      systemToArch = system: builtins.head (lib.strings.splitString "_" (builtins.head (lib.strings.splitString "-" system)));
+      userSystems = lib.lists.concatMap (u: lib.lists.concatMap (sys: [(lib.attrsets.nameValuePair u sys)]) systems) users;
+      mkHomeManagerConfig = {
+        user,
+        system,
+      }:
+        home-manager.lib.homeManagerConfiguration {
+          modules = [
+            {
+              nixpkgs.overlays = [(import ./overlays)];
+            }
+            ./users/josh/home.nix
+            {
+              home.username = lib.mkForce user;
+            }
+          ];
+          pkgs = nixpkgs.legacyPackages.${system};
+          extraSpecialArgs = {inherit inputs outputs;};
+        };
 
-      "josh@aarch64" = home-manager.lib.homeManagerConfiguration {
-        modules = [
-          {
-            nixpkgs.overlays = [(import ./overlays)];
-          }
-          ./users/josh/home.nix
-        ];
-        pkgs = nixpkgs.legacyPackages.aarch64-linux;
-        extraSpecialArgs = {inherit inputs outputs;};
-      };
-
-      "root@x86" = home-manager.lib.homeManagerConfiguration {
-        modules = [
-          {
-            nixpkgs.overlays = [(import ./overlays)];
-          }
-          ./users/root
-        ];
-        pkgs = nixpkgs.legacyPackages.x86_64-linux;
-        extraSpecialArgs = {inherit inputs outputs;};
-      };
-    };
+      configs = builtins.listToAttrs (builtins.map ({
+          name,
+          value,
+        }: (lib.attrsets.nameValuePair (lib.concatStringsSep "@" [name (systemToArch value)]) (mkHomeManagerConfig {
+          user = name;
+          system = value;
+        })))
+        userSystems);
+    in
+      configs;
 
     packages = forEachPkgs (pkgs: {
       devContainer = import ./devcontainer.nix {inherit pkgs nix2container;};

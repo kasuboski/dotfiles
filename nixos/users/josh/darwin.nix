@@ -1,9 +1,13 @@
 {
+  inputs,
   pkgs,
   lib,
   config,
   ...
 }: {
+  home-manager.sharedModules = [
+    inputs.mac-app-util.homeManagerModules.default
+  ];
   # https://github.com/nix-community/home-manager/pull/2408
   environment.pathsToLink = ["/share/fish"];
   programs.fish.enable = true;

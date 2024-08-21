@@ -10,10 +10,11 @@
   homePrefix =
     if isDarwin
     then "/Users"
+    else if config.home.username == "root"
+    then "/root"
     else "/home";
 in {
   imports = [
-    inputs.mac-app-util.homeManagerModules.default
     inputs.vscode-server.homeModules.default
     inputs.nixvim.homeManagerModules.nixvim
     ./kubernetes.nix
