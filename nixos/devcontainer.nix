@@ -16,7 +16,7 @@
     nixbld:x:30000:${lib.concatStringsSep "," (lib.genList (i: "nixbld${toString (i + 1)}") 32)}
   '';
   nixcontainer = nix2containerpkgs.nix2container.buildImage {
-    name = "bash";
+    name = "nix-base";
     initializeNixDatabase = true;
     copyToRoot = [
       # When we want tools in /, we need to symlink them in order to
