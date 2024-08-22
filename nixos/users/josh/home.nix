@@ -39,7 +39,7 @@ in {
     });
 
   xdg.enable = true;
-  xdg.configFile."fish/themes/CatppuccinMocha.theme".source = ../../../dot_config/private_fish/themes/CatppuccinMocha.theme;
+  xdg.configFile."fish/themes/CatppuccinMocha.theme".source = ../themes/CatppuccinMochaFish.theme;
 
   programs =
     {
@@ -63,7 +63,7 @@ in {
       bat = {
         enable = true;
         themes = {
-          catppuccinMocha = {src = ../../../dot_config/bat/themes/Catppuccin-mocha.tmTheme;};
+          catppuccinMocha = {src = ../themes/CatppuccinMochaBat.tmTheme;};
         };
         config = {
           theme = "catppuccinMocha";
@@ -175,7 +175,7 @@ in {
       };
       starship = {
         enable = true;
-        settings = lib.importTOML ../../../dot_config/starship.toml;
+        settings = lib.importTOML ../starship.toml;
       };
       tealdeer.enable = true;
       zoxide.enable = true;
