@@ -11,7 +11,7 @@
     if isDarwin
     then "/Users"
     else if config.home.username == "root"
-    then "/root"
+    then "/"
     else "/home";
 in {
   imports = [

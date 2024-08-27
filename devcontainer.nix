@@ -57,11 +57,10 @@
     FROM ${nixcontainer.imageName}:${nixcontainer.imageTag}
     WORKDIR /root/flake
     COPY . .
-    WORKDIR /root/flake/nixos
     RUN home-manager-install && nix-store --gc
   '';
 in
   pkgs.writeShellScriptBin "buildImage" ''
     ${nixcontainer.copyToDockerDaemon}/bin/copy-to-docker-daemon
-    docker build -f ${dockerfile} -t dev:latest ../.
+    docker build -f ${dockerfile} -t dev:latest .
   ''
