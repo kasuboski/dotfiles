@@ -14,13 +14,20 @@
     ../common/global
     ../common/optional/ephemeral.nix
     ./storage.nix
-#    ./observability.nix
+    #    ./observability.nix
+    ./ollama.nix
     ./plex.nix
     ./upload.nix
     ../../users/josh
   ];
 
   nixpkgs.config.allowUnfree = true;
+  nixpkgs.config.cudaSupport = true;
+  hardware.nvidia.modesetting.enable = true;
+  hardware.nvidia.nvidiaSettings = true;
+  hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.stable;
+  hardware.graphics.enable = true;
+  services.xserver.videoDrivers = ["nvidia"];
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
@@ -34,7 +41,7 @@
 
   # Set your time zone.
   # time.timeZone = "Europe/Amsterdam";
-  boot.kernelModules = ["nct6775"];
+  boot.kernelModules = ["nct6775"] ++ ["nvidia" "nvidia_modeset" "nvidia_uvm" "nvidia_drm"];
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget

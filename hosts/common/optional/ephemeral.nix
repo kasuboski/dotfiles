@@ -8,6 +8,7 @@
     directories =
       [
         "/etc/nixos"
+        "/var/lib/nixos"
       ]
       ++ lib.optional config.services.tailscale.enable "/var/lib/tailscale"
       ++ lib.optional config.services.prometheus.enable "/var/lib/${config.services.prometheus.stateDir}"
