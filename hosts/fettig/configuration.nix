@@ -14,7 +14,7 @@
     ../common/global
     ../common/optional/ephemeral.nix
     ./storage.nix
-    ./observability.nix
+#    ./observability.nix
     ./plex.nix
     ./upload.nix
     ../../users/josh
