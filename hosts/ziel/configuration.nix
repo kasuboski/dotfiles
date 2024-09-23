@@ -18,6 +18,7 @@
     ./home-assistant.nix
     ./blocky.nix
     ./monitoring.nix
+    ./tunnel.nix
     ./vscode-server.nix
   ];
 
@@ -46,7 +47,7 @@
   fileSystems."/mnt/storage" = {
     device = "192.168.86.186:/storage";
     fsType = "nfs";
-    options = [ "x-systemd.automount" "noauto" ];
+    options = ["x-systemd.automount" "noauto"];
   };
 
   hardware.bluetooth.enable = true;
