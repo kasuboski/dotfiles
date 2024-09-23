@@ -43,6 +43,12 @@
     lm_sensors
   ];
 
+  fileSystems."/mnt/storage" = {
+    device = "192.168.86.186:/storage";
+    fsType = "nfs";
+    options = [ "x-systemd.automount" "noauto" ];
+  };
+
   hardware.bluetooth.enable = true;
   networking.wireless.enable = true;
 
