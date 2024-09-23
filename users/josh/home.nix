@@ -204,6 +204,7 @@ in {
 
   home.packages = with pkgs; [
     alejandra
+    charm-freeze
     comma
     du-dust
     fd
