@@ -13,7 +13,7 @@
   services.ollama = {
     enable = true;
     loadModels = [
-      "llama3"
+      "llama3.2"
       "starcoder2:3b"
       "nomic-embed-text"
     ];
