@@ -36,8 +36,12 @@
   services.samba = {
     enable = true;
     openFirewall = true;
-    securityType = "user";
-    shares = {
+    settings = {
+      global = {
+        "fruit:copyfile" = "yes";
+        "server min protocol" = "SMB3_00";
+        security = "user";
+      };
       storage = {
         path = "/srv/nfs4/storage";
         writeable = true;
@@ -45,9 +49,5 @@
         "force user" = "josh";
       };
     };
-    extraConfig = ''
-      fruit:copyfile = yes
-      server min protocol = SMB3_00
-    '';
   };
 }

@@ -16,6 +16,7 @@
     ./storage.nix
     #    ./observability.nix
     ./ollama.nix
+    #./openwebui.nix
     ./plex.nix
     ./upload.nix
     ../../users/josh
@@ -25,6 +26,7 @@
   nixpkgs.config.cudaSupport = true;
   hardware.nvidia.modesetting.enable = true;
   hardware.nvidia.nvidiaSettings = true;
+  hardware.nvidia.open = false;
   hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.stable;
   hardware.graphics.enable = true;
   services.xserver.videoDrivers = ["nvidia"];
