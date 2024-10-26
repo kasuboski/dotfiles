@@ -151,7 +151,7 @@ in {
           lsp = {
             enable = true;
             servers = {
-              rust-analyzer = {
+              rust_analyzer = {
                 enable = true;
                 installCargo = false;
                 installRustc = false;
@@ -171,6 +171,7 @@ in {
           rainbow-delimiters.enable = true;
           telescope.enable = true;
           treesitter.enable = true;
+          web-devicons.enable = true;
         };
       };
       starship = {

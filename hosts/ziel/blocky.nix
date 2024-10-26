@@ -1,28 +1,12 @@
 {...}: let
   routerIp = "192.168.86.1";
-  talosCluster = "192.168.86.243";
-  clusterServices = [
-    "argocd"
-    "radarr"
-    "sonarr"
-    "lidarr"
-    "sabnzbd"
-    "qbittorrent"
-  ];
-  clusterMap = builtins.listToAttrs (builtins.map (svc: {
-      name = "${svc}.joshcorp.co";
-      value = talosCluster;
-    })
-    clusterServices);
+  extCoreDNSIp = "192.168.86.244";
 in {
   networking.firewall.allowedTCPPorts = [53];
   networking.firewall.allowedUDPPorts = [53];
   services.blocky = {
     enable = true;
     settings = {
-      customDNS = {
-        mapping = {} // clusterMap;
-      };
       conditional = {
         fallbackUpstream = true;
         rewrite = {
@@ -30,7 +14,7 @@ in {
         };
         mapping = {
           "feeds.joshcorp.co" = "1.1.1.1";
-          "joshcorp.co" = "127.0.0.1";
+          "joshcorp.co" = extCoreDNSIp;
           lan = routerIp;
           "86.168.192.in-addr.arpa" = routerIp;
           "." = routerIp;
