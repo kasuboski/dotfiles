@@ -213,5 +213,7 @@ in {
     jq
     ripgrep
     yq
+
+    inputs.flox.packages.${pkgs.system}.default
   ];
 }

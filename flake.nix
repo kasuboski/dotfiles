@@ -1,4 +1,8 @@
 {
+  nixConfig = {
+    extra-trusted-substituters = ["https://cache.flox.dev"];
+    extra-trusted-public-keys = ["flox-cache-public-1:7F4OyH7ZCnFhcze3fJdfyXYLQw/aV7GEed86nQ7IsOs="];
+  };
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-unstable";
     lima.url = "github:kasuboski/nixos-lima";
@@ -16,6 +20,8 @@
     nixvim.inputs.nixpkgs.follows = "nixpkgs";
     nix2container.url = "github:nlewo/nix2container";
     nix2container.inputs.nixpkgs.follows = "nixpkgs";
+    flox.url = "github:flox/flox/v1.3.10";
+    flox.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = {
@@ -28,6 +34,7 @@
     mac-app-util,
     vscode-server,
     nix2container,
+    flox,
     ...
   } @ inputs: let
     inherit (self) outputs;
