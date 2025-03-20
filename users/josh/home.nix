@@ -203,17 +203,23 @@ in {
       };
     });
 
-  home.packages = with pkgs; [
-    alejandra
-    charm-freeze
-    comma
-    du-dust
-    fd
-    hwatch
-    jq
-    ripgrep
-    yq
+  home.packages = with pkgs;
+    [
+      alejandra
+      charm-freeze
+      comma
+      du-dust
+      fd
+      hwatch
+      jq
+      ripgrep
+      uv
+      yq
 
-    inputs.flox.packages.${pkgs.system}.default
-  ];
+      inputs.flox.packages.${pkgs.system}.default
+    ]
+    ++ (lib.optionals isDarwin [
+      pkgs.docker-client
+      pkgs.lima
+    ]);
 }
