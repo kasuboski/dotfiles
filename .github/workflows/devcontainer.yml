@@ -2,21 +2,21 @@ name: Build and Push DevContainer
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
     paths:
-      - 'devcontainer.nix'
-      - 'flake.nix'
-      - 'flake.lock'
-      - 'users/**'
-      - 'hosts/**'
+      - "devcontainer.nix"
+      - "flake.nix"
+      - "flake.lock"
+      - "users/**"
+      - "hosts/**"
   pull_request:
-    branches: [ main ]
+    branches: [main]
     paths:
-      - 'devcontainer.nix'
-      - 'flake.nix'
-      - 'flake.lock'
-      - 'users/**'
-      - 'hosts/**'
+      - "devcontainer.nix"
+      - "flake.nix"
+      - "flake.lock"
+      - "users/**"
+      - "hosts/**"
   workflow_dispatch:
 
 env:
@@ -31,54 +31,59 @@ jobs:
       packages: write
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Install Nix
-      uses: DeterminateSystems/nix-installer-action@main
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v18
+        with:
+          extra-conf: |
+            trusted-public-keys = nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
+            trusted-substituters = https://nix-community.cachix.org https://cache.nixos.org
+            substituters = https://nix-community.cachix.org https://cache.nixos.org
 
-    - name: Setup Docker Buildx
-      uses: docker/setup-buildx-action@v3
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-    - name: Log in to Container Registry
-      if: github.event_name != 'pull_request'
-      uses: docker/login-action@v3
-      with:
-        registry: ${{ env.REGISTRY }}
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Log in to Container Registry
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Extract metadata
-      id: meta
-      uses: docker/metadata-action@v5
-      with:
-        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-        tags: |
-          type=ref,event=branch
-          type=ref,event=pr
-          type=sha,prefix={{branch}}-
-          type=raw,value=latest,enable={{is_default_branch}}
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=sha,prefix={{branch}}-
+            type=raw,value=latest,enable={{is_default_branch}}
 
-    - name: Build devcontainer script
-      run: |
-        nix build .#devContainer
-        
-    - name: Build and load base image
-      run: |
-        # Run the build script which loads the base image into Docker
-        ./result/bin/buildImage
-        
-    - name: Tag and push image
-      if: github.event_name != 'pull_request'
-      run: |
-        # Tag the locally built image with the registry tags
-        for tag in $(echo '${{ steps.meta.outputs.tags }}' | tr '\n' ' '); do
-          docker tag dev:latest "$tag"
-          docker push "$tag"
-        done
+      - name: Build devcontainer script
+        run: |
+          nix build .#devContainer
 
-    - name: Build image for PR (no push)
-      if: github.event_name == 'pull_request'
-      run: |
-        echo "Built devcontainer image successfully (PR - not pushing)"
-        docker images | grep dev
+      - name: Build and load base image
+        run: |
+          # Run the build script which loads the base image into Docker
+          ./result/bin/buildImage
+
+      - name: Tag and push image
+        if: github.event_name != 'pull_request'
+        run: |
+          # Tag the locally built image with the registry tags
+          for tag in $(echo '${{ steps.meta.outputs.tags }}' | tr '\n' ' '); do
+            docker tag dev:latest "$tag"
+            docker push "$tag"
+          done
+
+      - name: Build image for PR (no push)
+        if: github.event_name == 'pull_request'
+        run: |
+          echo "Built devcontainer image successfully (PR - not pushing)"
+          docker images | grep dev

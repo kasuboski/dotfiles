@@ -103,7 +103,7 @@
         home-manager.lib.homeManagerConfiguration {
           modules = [
             {
-              nixpkgs.overlays = [(import ./overlays)];
+              nixpkgs.overlays = [outputs.overlays.default];
             }
             ./users/josh/home.nix
             {

@@ -15,6 +15,9 @@ nix develop
 
 # Format all Nix files
 nix fmt
+
+# Platform-aware flake validation (avoids cross-compilation issues)
+./scripts/flake-check.sh
 ```
 
 ### Configuration Deployment
@@ -102,6 +105,6 @@ nix run .#devContainer
 ## Development Guidelines
 
 - Configuration changes should be made through Nix expressions, not manual file editing
-- Test configuration changes with `nix flake check` before deployment
+- Test configuration changes with `./scripts/flake-check.sh` before deployment
 - Use existing module patterns when adding new services or applications
 - Maintain consistency in theming and tool configuration across platforms
