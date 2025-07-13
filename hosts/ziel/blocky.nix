@@ -13,7 +13,9 @@ in {
           home = "lan";
         };
         mapping = {
+          "healthinsurance.joshcorp.co" = "1.1.1.1";
           "feeds.joshcorp.co" = "1.1.1.1";
+          "fishy.joshcorp.co" = "1.1.1.1";
           "joshcorp.co" = extCoreDNSIp;
           lan = routerIp;
           "86.168.192.in-addr.arpa" = routerIp;
