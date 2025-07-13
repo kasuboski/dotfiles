@@ -2,11 +2,6 @@
   pkgs,
   nix2container,
 }: let
-  pkgs-no-checks = pkgs.extend (final: prev: {
-    stdenv = prev.stdenv // {
-      mkDerivation = args: prev.stdenv.mkDerivation (args // { doCheck = false; });
-    };
-  });
   system = pkgs.system;
   nix2containerpkgs = nix2container.packages.${system};
 
@@ -39,7 +34,7 @@
       # in both / and /nix/store.
       (pkgs.buildEnv {
         name = "root";
-        paths = [pkgs-no-checks.bashInteractive pkgs-no-checks.coreutils pkgs-no-checks.nix pkgs-no-checks.cacert pkgs-no-checks.home-manager pkgs-no-checks.git];
+        paths = [pkgs.bashInteractive pkgs.coreutils pkgs.lix pkgs.cacert pkgs.home-manager pkgs.git];
         pathsToLink = ["/bin" "/etc/ssl" "/tmp"];
       })
       (pkgs.runCommand "extraDirs" {} ''
@@ -56,7 +51,7 @@
       '')
       # #github:kasuboski/dotfiles?dir=nixos#root@x86
       (pkgs.writeShellScriptBin "home-manager-install" ''
-        ${pkgs-no-checks.home-manager}/bin/home-manager switch --flake .#root@x86
+        ${pkgs.home-manager}/bin/home-manager switch --flake .#root@x86
       '')
     ];
     maxLayers = 100;
