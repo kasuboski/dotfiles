@@ -15,6 +15,16 @@
     nogroup:x:65534:
     nixbld:x:30000:${lib.concatStringsSep "," (lib.genList (i: "nixbld${toString (i + 1)}") 32)}
   '';
+  nixconf = ''
+    experimental-features = nix-command flakes repl-flake
+    max-jobs = auto
+    extra-nix-path = nixpkgs=flake:nixpkgs
+    max-silent-time = 10
+    fsync-metadata = false
+    trusted-public-keys = nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
+    trusted-substituters = https://nix-community.cachix.org https://cache.nixos.org
+    substituters = https://nix-community.cachix.org https://cache.nixos.org
+  '';
   nixcontainer = nix2containerpkgs.nix2container.buildImage {
     name = "nix-base";
     initializeNixDatabase = true;
@@ -32,15 +42,17 @@
         mkdir $out
         mkdir $out/tmp
         mkdir $out/etc
+        mkdir $out/etc/nix
         echo '${passwd}' > $out/etc/passwd
         echo '${group}' > $out/etc/group
+        echo '${nixconf}' > $out/etc/nix/nix.conf
         mkdir -p $out/root/.local/state/nix/profiles
         echo 'export PATH=/root/.nix-profile/bin:$PATH' > $out/root/.bashrc
 
       '')
       # #github:kasuboski/dotfiles?dir=nixos#root@x86
       (pkgs.writeShellScriptBin "home-manager-install" ''
-        ${pkgs.home-manager}/bin/home-manager switch --flake .#root@x86
+        ${pkgs.home-manager}/bin/home-manager switch --flake .#root@x86 --accept-flake-config
       '')
     ];
     maxLayers = 100;
@@ -48,7 +60,6 @@
       Cmd = ["/bin/bash"];
       Env = [
         "USER=root"
-        "NIX_CONFIG=extra-experimental-features = nix-command flakes"
         "SSL_CERT_FILE=/etc/ssl/certs/ca-bundle.crt"
       ];
     };
