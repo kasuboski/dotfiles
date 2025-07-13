@@ -12,7 +12,6 @@
     azure-cli
     crane
     kubernetes-helm
-    loft
     oras
     pipenv
   ];
