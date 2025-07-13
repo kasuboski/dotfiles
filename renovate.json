@@ -1,22 +1,11 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:base"
-  ],
+  "extends": ["config:base"],
   "lockFileMaintenance": {
     "enabled": true,
     "extends": ["schedule:weekly"]
   },
   "nix": {
     "enabled": true
-  },
-  "regexManagers": [
-    {
-      "fileMatch": ["^dot_tool-versions.tmpl$"],
-      "matchStrings": [
-        "#\\s*renovate:\\s*datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s.*? (?<currentValue>.*)\\s"
-      ],
-      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
-    }
-  ]
+  }
 }

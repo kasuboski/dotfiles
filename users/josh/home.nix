@@ -212,6 +212,7 @@ in {
       fd
       hwatch
       jq
+      nixd
       ripgrep
       uv
       yq

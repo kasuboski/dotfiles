@@ -29,7 +29,7 @@
     };
   };
 
-  nixpkgs.overlays = [outputs.overlays];
+  nixpkgs.overlays = [outputs.overlays.default];
 
   security.sudo.wheelNeedsPassword = false;
 
