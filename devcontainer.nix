@@ -52,7 +52,7 @@
       '')
       # #github:kasuboski/dotfiles?dir=nixos#root@x86
       (pkgs.writeShellScriptBin "home-manager-install" ''
-        ${pkgs.home-manager}/bin/home-manager switch --flake .#root@x86 --accept-flake-config
+        ${pkgs.home-manager}/bin/home-manager switch --flake .#root@x86
       '')
     ];
     maxLayers = 100;
