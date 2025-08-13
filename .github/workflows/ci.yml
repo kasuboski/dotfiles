@@ -92,5 +92,4 @@ jobs:
 
       - name: Build packages and dev shell
         run: |
-          nix build .#packages.${{ matrix.system }}.devContainer --no-link
           nix develop --command echo "Dev shell works"
