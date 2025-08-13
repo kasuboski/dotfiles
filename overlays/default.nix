@@ -2,6 +2,16 @@
   default = final: prev: {
     snapraid-btrfs = prev.callPackage ../pkgs/snapraid-btrfs.nix {};
     snapraid-btrfs-runner = prev.callPackage ../pkgs/snapraid-btrfs-runner.nix {};
+    # Fix skopeo build failure on aarch64-linux
+    # Issue: vendor/modules.txt is out of sync with go.mod
+    skopeo = prev.skopeo.overrideAttrs (oldAttrs: {
+      buildPhase = ''
+        runHook preBuild
+        patchShebangs .
+        make bin/skopeo completions docs -mod=mod
+        runHook postBuild
+      '';
+    });
     customplex = prev.plex.override {
       # https://github.com/nixos/nixpkgs/issues/433054
       plexRaw = prev.plexRaw.overrideAttrs (old: rec {

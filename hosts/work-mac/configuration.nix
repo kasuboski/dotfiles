@@ -20,12 +20,11 @@
   ];
 
   nix = {
-    useDaemon = true;
     settings = {
-      auto-optimise-store = true;
       trusted-users = ["@admin"];
       experimental-features = ["nix-command" "flakes"];
     };
+    optimise.automatic = true;
     gc = {
       automatic = true;
       options = "--delete-older-than 2d";
