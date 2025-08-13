@@ -67,26 +67,26 @@ jobs:
           case "${{ matrix.system }}" in
             x86_64-linux)
               echo "Building NixOS configurations for x86_64-linux..."
-              nix build .#nixosConfigurations.fettig --no-link
-              nix build .#nixosConfigurations.ziel --no-link
-              nix build .#nixosConfigurations.nixosx86 --no-link
-              nix build .#nixosConfigurations.live --no-link
-              nix build .#homeConfigurations."josh@x86_64" --no-link
+              nix build .#nixosConfigurations.fettig.config.system.build.toplevel --no-link
+              nix build .#nixosConfigurations.ziel.config.system.build.toplevel --no-link
+              nix build .#nixosConfigurations.nixosx86.config.system.build.toplevel --no-link
+              nix build .#nixosConfigurations.live.config.system.build.toplevel --no-link
+              nix build .#homeConfigurations."josh@x86_64".activationPackage --no-link
               ;;
             aarch64-linux)
               echo "Building NixOS configurations for aarch64-linux..."
-              nix build .#nixosConfigurations.nixos --no-link
-              nix build .#homeConfigurations."josh@aarch64" --no-link
+              nix build .#nixosConfigurations.nixos.config.system.build.toplevel --no-link
+              nix build .#homeConfigurations."josh@aarch64".activationPackage --no-link
               ;;
             x86_64-darwin)
               echo "Building Darwin configurations for x86_64-darwin..."
-              nix build .#darwinConfigurations.work-mac --no-link
-              nix build .#homeConfigurations."josh@x86_64" --no-link
+              nix build .#darwinConfigurations.work-mac.system --no-link
+              nix build .#homeConfigurations."josh@x86_64".activationPackage --no-link
               ;;
             aarch64-darwin)
               echo "Building Darwin configurations for aarch64-darwin..."
-              nix build .#darwinConfigurations.personal-mac --no-link
-              nix build .#homeConfigurations."josh@aarch64" --no-link
+              nix build .#darwinConfigurations.personal-mac.system --no-link
+              nix build .#homeConfigurations."josh@aarch64".activationPackage --no-link
               ;;
           esac
 
