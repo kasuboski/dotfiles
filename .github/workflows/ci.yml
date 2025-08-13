@@ -1,0 +1,96 @@
+name: "CI"
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: ubuntu-latest
+            system: x86_64-linux
+          - runner: ubuntu-24.04-arm
+            system: aarch64-linux
+          - runner: macos-13
+            system: x86_64-darwin
+          - runner: macos-14
+            system: aarch64-darwin
+
+    runs-on: ${{ matrix.runner }}
+    name: Build ${{ matrix.system }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v18
+        with:
+          extra-conf: |
+            trusted-public-keys = nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
+            trusted-substituters = https://nix-community.cachix.org https://cache.nixos.org
+            substituters = https://nix-community.cachix.org https://cache.nixos.org
+
+      - name: Setup Cachix
+        uses: cachix/cachix-action@v15
+        with:
+          name: kasuboski-dotfiles
+          authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
+
+      - name: Check format
+        run: |
+          nix fmt
+          if ! git diff --exit-code; then
+            echo "Code is not formatted. Run 'nix fmt' and commit the changes."
+            exit 1
+          fi
+
+      - name: Validate flake structure
+        run: |
+          # Check cross-platform outputs first
+          nix eval --json .#overlays --apply 'builtins.attrNames' >/dev/null
+          nix eval --json .#devShells.${{ matrix.system }} --apply 'builtins.attrNames' >/dev/null
+          nix eval --json .#formatter.${{ matrix.system }} >/dev/null
+          nix flake show --all-systems >/dev/null
+
+      - name: Build platform-specific configurations
+        run: |
+          case "${{ matrix.system }}" in
+            x86_64-linux)
+              echo "Building NixOS configurations for x86_64-linux..."
+              nix build .#nixosConfigurations.fettig --no-link
+              nix build .#nixosConfigurations.ziel --no-link
+              nix build .#nixosConfigurations.nixosx86 --no-link
+              nix build .#nixosConfigurations.live --no-link
+              nix build .#homeConfigurations."josh@x86_64" --no-link
+              ;;
+            aarch64-linux)
+              echo "Building NixOS configurations for aarch64-linux..."
+              nix build .#nixosConfigurations.nixos --no-link
+              nix build .#homeConfigurations."josh@aarch64" --no-link
+              ;;
+            x86_64-darwin)
+              echo "Building Darwin configurations for x86_64-darwin..."
+              nix build .#darwinConfigurations.work-mac --no-link
+              nix build .#homeConfigurations."josh@x86_64" --no-link
+              ;;
+            aarch64-darwin)
+              echo "Building Darwin configurations for aarch64-darwin..."
+              nix build .#darwinConfigurations.personal-mac --no-link
+              nix build .#homeConfigurations."josh@aarch64" --no-link
+              ;;
+          esac
+
+      - name: Build packages and dev shell
+        run: |
+          nix build .#packages.${{ matrix.system }}.devContainer --no-link
+          nix develop --command echo "Dev shell works"
