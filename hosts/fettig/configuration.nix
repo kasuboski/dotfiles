@@ -3,6 +3,7 @@
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 {
   inputs,
+  outputs,
   config,
   pkgs,
   ...
@@ -22,6 +23,7 @@
     ../../users/josh
   ];
 
+  nixpkgs.overlays = [outputs.overlays.default];
   nixpkgs.config.allowUnfree = true;
   nixpkgs.config.cudaSupport = true;
   hardware.nvidia.modesetting.enable = true;

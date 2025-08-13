@@ -126,7 +126,6 @@ in {
       fzf.enable = true;
       lsd = {
         enable = true;
-        enableAliases = true;
       };
       nixvim = {
         enable = true;
@@ -149,10 +148,10 @@ in {
           coq-nvim.enable = true;
           direnv.enable = true;
           lsp = {
-            enable = true;
+            enable = false;
             servers = {
               rust_analyzer = {
-                enable = true;
+                enable = false;
                 installCargo = false;
                 installRustc = false;
               };
@@ -163,7 +162,7 @@ in {
             enable = true;
             autoEnableSources = true;
             settings.sources = [
-              {name = "nvim_lsp";}
+              #{name = "nvim_lsp";}
               {name = "path";}
               {name = "buffer";}
             ];

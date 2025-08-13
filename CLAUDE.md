@@ -25,7 +25,7 @@ nix fmt
 **NixOS (Linux hosts):**
 ```bash
 # Deploy to a specific NixOS host
-nixos-rebuild switch --flake .#hostname --use-remote-sudo
+nixos-rebuild switch --flake .#hostname --sudo
 
 # Available hosts: fettig, ziel, lima, live
 ```
@@ -98,7 +98,7 @@ nix run .#devContainer
 
 ### Linux/NixOS
 - Full system configuration including services and hardware
-- Optional impermanence for stateless systems  
+- Optional impermanence for stateless systems
 - NVIDIA GPU support on applicable hosts
 - Docker installation handled by install script on non-NixOS Linux
 
@@ -108,3 +108,154 @@ nix run .#devContainer
 - Test configuration changes with `./scripts/flake-check.sh` before deployment
 - Use existing module patterns when adding new services or applications
 - Maintain consistency in theming and tool configuration across platforms
+
+## Nix Guidelines
+
+This repository manages system configurations using NixOS, nix-darwin, and Home Manager. Follow these practices when working with Nix configurations.
+
+## Package Compilation Issues
+
+### When packages fail to compile on unstable:
+
+1. **Check newer nixpkgs versions first**
+   ```bash
+   # Check if issue is fixed in a newer commit
+   nix search nixpkgs#<package-name> --show-trace
+
+   # Try a specific nixpkgs commit
+   nix shell github:NixOS/nixpkgs/<commit-hash>#<package-name>
+   ```
+
+2. **Search nixpkgs GitHub issues**
+   - Go to https://github.com/NixOS/nixpkgs/issues
+   - Search for: `<package-name> compilation error` or `<package-name> build failure`
+   - Look for recent issues and check if fixes are available in PRs
+   - Often maintainers will reference specific commits or workarounds
+
+3. **Check package update status**
+   ```bash
+   # See package history and recent changes
+   git log --oneline pkgs/by-name/<first-two-letters>/<package-name>/
+
+   # Or for older structure
+   git log --oneline pkgs/<category>/<package-name>/
+   ```
+
+## Custom Overlays
+
+### When nixpkgs doesn't have a fix:
+
+1. **Research existing solutions**
+   - Search GitHub issues for overlay examples: `<package-name> overlay site:github.com`
+   - Check if someone has documented a working overlay solution
+   - Look in nixpkgs PRs for potential fixes not yet merged
+
+2. **Create overlay structure**
+   ```nix
+   # overlays/default.nix or overlays/<package-name>.nix
+   final: prev: {
+     <package-name> = prev.<package-name>.overrideAttrs (oldAttrs: {
+       # Your fixes here
+     });
+   }
+   ```
+
+3. **Common overlay patterns**
+   - Version bumps: `version = "new-version"; src = fetchFromGitHub { ... }`
+   - Patch fixes: `patches = oldAttrs.patches or [] ++ [ ./fix.patch ];`
+   - Dependency changes: `buildInputs = oldAttrs.buildInputs ++ [ extra-dep ];`
+   - Build flag modifications: `configureFlags = oldAttrs.configureFlags ++ [ "--enable-feature" ];`
+
+## Debugging Strategies
+
+### Build failures:
+```bash
+# Get detailed build logs
+nix build .#<output> --show-trace --verbose
+
+# Debug in temporary build environment
+nix develop .#<package-name>
+
+# Check build phases
+nix build .#<package-name> --keep-failed
+cd /tmp/nix-build-*/ && ls -la
+```
+
+### Dependency issues:
+```bash
+# Inspect package dependencies
+nix show-derivation .#<package-name>
+
+# Check what's in the store
+nix path-info -r .#<package-name>
+```
+
+## Version Management
+
+### Flake inputs:
+- Pin nixpkgs to known-good commits if locking latest unstable doesn't work
+- Document why specific versions are pinned in commit messages
+
+### System-specific considerations:
+- **NixOS**: Test changes with `nixos-rebuild build` before switching
+- **nix-darwin**: Use `darwin-rebuild build` for Darwin systems
+- **Home Manager**: Test with `home-manager build` before activation
+
+## Common Commands
+
+```bash
+# Update flake inputs
+nix flake update
+
+# Update specific input
+nix flake lock --update-input nixpkgs
+
+# Check flake outputs
+nix flake show
+
+# Build specific configuration
+nix build .#nixosConfigurations.<hostname>.config.system.build.toplevel
+nix build .#darwinConfigurations.<hostname>.system
+nix build .#homeConfigurations.<username>.activationPackage
+
+# Garbage collection
+nix-collect-garbage -d
+```
+
+## Testing Changes
+
+1. **Build before applying**
+   ```bash
+   # For NixOS
+   nixos-rebuild build --flake .#<hostname> --sudo
+
+   # For Darwin
+   darwin-rebuild build --flake .#<hostname>
+
+   # For Home Manager
+   home-manager build --flake .#<username>@<hostname>
+   ```
+
+2. **Use VMs for testing NixOS changes**
+  If possible
+   ```bash
+   nixos-rebuild build-vm --flake .#<hostname>
+   ```
+
+3. **Rollback strategy**
+   - Always keep previous generations available
+   - Document major changes in commit messages
+   - Test on non-critical systems first
+
+## Documentation
+
+- **Always document custom overlays** with comments explaining why they're needed
+- **Reference GitHub issues** in overlay files when applicable
+- **Keep track of upstream status** - note if overlay can be removed when upstream fixes land
+- **Update comments** when nixpkgs versions change
+
+## IMPORTANT Notes
+
+- **NEVER blindly copy overlay code** - understand what it does and why
+- **Check if overlays are still needed** when updating nixpkgs versions
+- **Test configurations on target architectures** (x86_64-linux, aarch64-darwin, etc.)

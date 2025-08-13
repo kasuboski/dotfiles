@@ -20,8 +20,7 @@
     nixvim.inputs.nixpkgs.follows = "nixpkgs";
     nix2container.url = "github:nlewo/nix2container";
     nix2container.inputs.nixpkgs.follows = "nixpkgs";
-    flox.url = "github:flox/flox/v1.3.10";
-    flox.inputs.nixpkgs.follows = "nixpkgs";
+    flox.url = "github:flox/flox/v1.6.1";
   };
 
   outputs = {

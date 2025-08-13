@@ -15,13 +15,15 @@
       ++ lib.optional config.services.grafana.enable config.services.grafana.dataDir
       ++ lib.optional config.services.samba.enable "/var/lib/samba";
     files = [
-      "/etc/machine-id"
       "/etc/ssh/ssh_host_ed25519_key"
       "/etc/ssh/ssh_host_ed25519_key.pub"
       "/etc/ssh/ssh_host_rsa_key"
       "/etc/ssh/ssh_host_rsa_key.pub"
     ];
   };
+
+  # Handle machine-id properly with impermanence by symlinking to persistent storage
+  environment.etc."machine-id".source = "/persist/etc/machine-id";
 
   security.sudo.extraConfig = ''
     # rollback results in sudo lectures after each reboot
