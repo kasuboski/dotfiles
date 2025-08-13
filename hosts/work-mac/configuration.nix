@@ -43,4 +43,6 @@
   '';
 
   environment.shells = with pkgs; [bashInteractive zsh fish];
+
+  system.stateVersion = 6;
 }

@@ -71,7 +71,7 @@ jobs:
               nix build .#nixosConfigurations.ziel.config.system.build.toplevel --no-link
               nix build .#nixosConfigurations.nixosx86.config.system.build.toplevel --no-link
               nix build .#nixosConfigurations.live.config.system.build.toplevel --no-link
-              nix build .#homeConfigurations."josh@x86_64".activationPackage --no-link
+              nix build .#homeConfigurations."josh@x86".activationPackage --no-link
               ;;
             aarch64-linux)
               echo "Building NixOS configurations for aarch64-linux..."
@@ -81,7 +81,7 @@ jobs:
             x86_64-darwin)
               echo "Building Darwin configurations for x86_64-darwin..."
               nix build .#darwinConfigurations.work-mac.system --no-link
-              nix build .#homeConfigurations."josh@x86_64".activationPackage --no-link
+              nix build .#homeConfigurations."josh@x86".activationPackage --no-link
               ;;
             aarch64-darwin)
               echo "Building Darwin configurations for aarch64-darwin..."
