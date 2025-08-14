@@ -51,10 +51,10 @@
       '')
       # #github:kasuboski/dotfiles?dir=nixos#root@x86
       (pkgs.writeShellScriptBin "home-manager-install" ''
-        # Disable tests for all packages during build to fix container issues
+        # Override flox input to use a fixed nix package
         ${pkgs.home-manager}/bin/home-manager switch --flake .#root@x86 \
-          --option check false \
-          --option pure-eval false
+          --override-input flox/nixpkgs github:NixOS/nixpkgs/nixos-unstable \
+          --impure
       '')
     ];
     maxLayers = 100;
