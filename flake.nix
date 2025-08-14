@@ -1,7 +1,7 @@
 {
   nixConfig = {
-    extra-trusted-substituters = ["https://cache.flox.dev"];
-    extra-trusted-public-keys = ["flox-cache-public-1:7F4OyH7ZCnFhcze3fJdfyXYLQw/aV7GEed86nQ7IsOs="];
+    extra-trusted-substituters = ["https://cache.flox.dev" "https://kasuboski-dotfiles.cachix.org"];
+    extra-trusted-public-keys = ["flox-cache-public-1:7F4OyH7ZCnFhcze3fJdfyXYLQw/aV7GEed86nQ7IsOs=" "kasuboski-dotfiles.cachix.org-1:MHEjS/mTAIU5O0W5yzglU+9shkWAkud88qAiO1CEas0="];
   };
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-unstable";
