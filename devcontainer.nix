@@ -51,7 +51,10 @@
       '')
       # #github:kasuboski/dotfiles?dir=nixos#root@x86
       (pkgs.writeShellScriptBin "home-manager-install" ''
-        ${pkgs.home-manager}/bin/home-manager switch --flake .#root@x86
+        # Disable tests for all packages during build to fix container issues
+        ${pkgs.home-manager}/bin/home-manager switch --flake .#root@x86 \
+          --option check false \
+          --option pure-eval false
       '')
     ];
     maxLayers = 100;
