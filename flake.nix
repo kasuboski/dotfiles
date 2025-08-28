@@ -21,19 +21,20 @@
     nix2container.url = "github:nlewo/nix2container";
     nix2container.inputs.nixpkgs.follows = "nixpkgs";
     flox.url = "github:flox/flox/v1.6.1";
+
+    disko.url = "github:nix-community/disko";
+    disko.inputs.nixpkgs.follows = "nixpkgs";
+    nixos-anywhere.url = "github:nix-community/nixos-anywhere";
+    nixos-anywhere.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = {
     self,
     nixpkgs,
     lima,
-    impermanence,
     home-manager,
     darwin,
-    mac-app-util,
-    vscode-server,
     nix2container,
-    flox,
     ...
   } @ inputs: let
     inherit (self) outputs;
@@ -76,6 +77,15 @@
         modules = [
           lima.nixosModules.lima
           ./hosts/lima/user-config.nix
+        ];
+      };
+
+      zwerg = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = {inherit inputs outputs;};
+        modules = [
+          # Main configuration for this host
+          ./hosts/zwerg/configuration.nix
         ];
       };
 

@@ -39,6 +39,7 @@
     curl
     htop
     git
+    ghostty.terminfo
   ];
 
   services.tailscale = {

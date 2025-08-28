@@ -37,8 +37,14 @@
     # so we can manipulate btrfs subvolumes.
     mount -t btrfs -o subvol=/ /dev/disk/by-label/nixos /mnt
 
-    btrfs subvolume list -o /mnt/root |
-    cut -f9 -d' ' |
+    # List all subvolumes on the filesystem.
+    # Grep for any path that is exactly "root" or starts with "root/".
+    # This correctly identifies the parent and all nested children.
+    # We then reverse this list with `tac` to ensure we delete children first.
+    btrfs subvolume list /mnt |
+    grep -E ' path root(/|$)' |
+    awk '{print $NF}' |
+    tac |
     while read subvolume; do
       echo "deleting /$subvolume subvolume..."
       btrfs subvolume delete "/mnt/$subvolume"
