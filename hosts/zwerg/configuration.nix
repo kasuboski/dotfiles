@@ -12,6 +12,7 @@
     ../common/global
     ../common/optional/ephemeral.nix
     ../../users/josh
+    ./plex.nix
   ];
 
   nixpkgs.overlays = [outputs.overlays.default];
