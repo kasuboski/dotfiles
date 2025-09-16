@@ -11,6 +11,7 @@
     inputs.impermanence.nixosModule
     ../common/global
     ../common/optional/ephemeral.nix
+    ./storage.nix
     ../../users/josh
     ./plex.nix
   ];
@@ -48,5 +49,5 @@
 
   users.mutableUsers = false;
 
-  system.stateVersion = "25.05";
+  system.stateVersion = "25.11";
 }

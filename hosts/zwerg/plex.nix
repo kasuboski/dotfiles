@@ -5,7 +5,12 @@
 }: {
   environment.persistence."/persist" = {
     directories = [
-      {directory="/var/lib/plex"; user="plex"; group="plex"; mode="0775";}
+      {
+        directory = "/var/lib/plex";
+        user = "plex";
+        group = "plex";
+        mode = "0775";
+      }
     ];
   };
   services.plex = {
