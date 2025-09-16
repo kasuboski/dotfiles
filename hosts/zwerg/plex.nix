@@ -18,4 +18,8 @@
     openFirewall = true;
     package = pkgs.customplex;
   };
+
+  users.users.plex = {
+    extraGroups = ["users"];
+  };
 }
