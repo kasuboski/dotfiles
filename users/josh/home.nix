@@ -207,6 +207,7 @@ in {
       alejandra
       charm-freeze
       comma
+      devenv
       du-dust
       fd
       hwatch
