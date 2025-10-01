@@ -215,7 +215,7 @@ in {
       nixd
       ripgrep
       uv
-      yq
+      yq-go
 
       inputs.flox.packages.${pkgs.system}.default
     ]
