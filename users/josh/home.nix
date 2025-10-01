@@ -37,6 +37,9 @@ in {
     // (lib.optionalAttrs isLinux {
       LOCALE_ARCHIVE_2_27 = lib.mkForce "${pkgs.glibcLocalesUtf8}/lib/locale/locale-archive";
     });
+  home.sessionPath = [
+    "$HOME/.local/bin"
+  ];
 
   xdg.enable = true;
   xdg.configFile."fish/themes/CatppuccinMocha.theme".source = ../themes/CatppuccinMochaFish.theme;
