@@ -20,6 +20,7 @@
   ];
 
   nix = {
+  package = pkgs.lixPackageSets.stable.lix;
     settings = {
       trusted-users = ["@admin"];
       experimental-features = ["nix-command" "flakes"];
@@ -30,6 +31,8 @@
       options = "--delete-older-than 2d";
     };
   };
+
+  ids.gids.nixbld = 30000;
 
   # zsh is the default shell on Mac and we want to make sure that we're
   # configuring the rc correctly with nix-darwin paths.
@@ -44,5 +47,5 @@
 
   environment.shells = with pkgs; [bashInteractive zsh fish];
 
-  system.stateVersion = 6;
+  system.stateVersion = 5;
 }
