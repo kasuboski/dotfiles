@@ -47,6 +47,7 @@ in {
   programs =
     {
       home-manager.enable = true;
+      bun.enable = true;
       git = {
         enable = true;
         userName = "Josh Kasuboski";

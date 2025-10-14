@@ -20,7 +20,7 @@
   ];
 
   nix = {
-  package = pkgs.lixPackageSets.stable.lix;
+    package = pkgs.lixPackageSets.stable.lix;
     settings = {
       trusted-users = ["@admin"];
       experimental-features = ["nix-command" "flakes"];
