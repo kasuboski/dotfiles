@@ -51,7 +51,10 @@
       '')
       # #github:kasuboski/dotfiles?dir=nixos#root@x86
       (pkgs.writeShellScriptBin "home-manager-install" ''
-        ${pkgs.home-manager}/bin/home-manager switch --flake .#root@x86
+        # Override flox input to use a fixed nix package
+        ${pkgs.home-manager}/bin/home-manager switch --flake .#root@x86 \
+          --override-input flox/nixpkgs github:NixOS/nixpkgs/nixos-unstable \
+          --impure
       '')
     ];
     maxLayers = 100;
