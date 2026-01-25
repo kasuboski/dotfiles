@@ -131,6 +131,7 @@ in {
       lsd = {
         enable = true;
       };
+      mise.enable = true;
       nixvim = {
         enable = true;
         opts = {

@@ -1,13 +1,4 @@
-{
-  inputs,
-  config,
-  lib,
-  pkgs,
-  ...
-}: {
-  programs = {
-    mise.enable = true;
-  };
+{pkgs, ...}: {
   home.packages = with pkgs; [
     azure-cli
     crane
