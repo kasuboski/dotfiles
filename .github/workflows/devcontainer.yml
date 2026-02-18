@@ -8,7 +8,8 @@ on:
       - "flake.nix"
       - "flake.lock"
       - "users/**"
-      - "hosts/**"
+      - "overlays/**"
+      - "pkgs/**"
   pull_request:
     branches: [main]
     paths:
@@ -16,7 +17,8 @@ on:
       - "flake.nix"
       - "flake.lock"
       - "users/**"
-      - "hosts/**"
+      - "overlays/**"
+      - "pkgs/**"
   workflow_dispatch:
 
 env:
