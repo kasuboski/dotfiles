@@ -13,6 +13,7 @@
     ../common/global
     ../common/optional/ephemeral.nix
     ../../users/josh
+    ./docker.nix
   ];
 
   nixpkgs.overlays = [outputs.overlays.default];
@@ -38,6 +39,7 @@
   environment.systemPackages = with pkgs; [
     lm_sensors
     pipes-rs
+    (pkgs.nvtopPackages.nvidia.override {amd = true;})
   ];
 
   services.netdata.enable = true;
