@@ -1,5 +1,8 @@
 {
   default = final: prev: {
+    nix = prev.nix.overrideAttrs {
+      doCheck = false;
+    };
     snapraid-btrfs = prev.callPackage ../pkgs/snapraid-btrfs.nix {};
     snapraid-btrfs-runner = prev.callPackage ../pkgs/snapraid-btrfs-runner.nix {};
     customplex = prev.plex.override {
