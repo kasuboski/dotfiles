@@ -20,9 +20,9 @@
     max-jobs = auto
     extra-nix-path = nixpkgs=flake:nixpkgs
     fsync-metadata = false
-    trusted-public-keys = nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
-    trusted-substituters = https://nix-community.cachix.org https://cache.nixos.org
-    substituters = https://nix-community.cachix.org https://cache.nixos.org
+    trusted-public-keys = nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= flox-cache-public-1:7F4OyH7ZCnFhcze3fJdfyXYLQw/aV7GEed86nQ7IsOs= kasuboski-dotfiles.cachix.org-1:MHEjS/mTAIU5O0W5yzglU+9shkWAkud88qAiO1CEas0=
+    trusted-substituters = https://nix-community.cachix.org https://cache.nixos.org https://cache.flox.dev https://kasuboski-dotfiles.cachix.org
+    substituters = https://nix-community.cachix.org https://cache.nixos.org https://cache.flox.dev https://kasuboski-dotfiles.cachix.org
   '';
   nixcontainer = nix2containerpkgs.nix2container.buildImage {
     name = "nix-base";

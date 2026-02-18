@@ -40,9 +40,10 @@ jobs:
         uses: DeterminateSystems/nix-installer-action@90bb610b90bf290cad97484ba341453bd1cbefea # v19
         with:
           extra-conf: |
-            trusted-public-keys = nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
-            trusted-substituters = https://nix-community.cachix.org https://cache.nixos.org
-            substituters = https://nix-community.cachix.org https://cache.nixos.org
+            accept-flake-config = true
+            trusted-public-keys = nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= flox-cache-public-1:7F4OyH7ZCnFhcze3fJdfyXYLQw/aV7GEed86nQ7IsOs= kasuboski-dotfiles.cachix.org-1:MHEjS/mTAIU5O0W5yzglU+9shkWAkud88qAiO1CEas0=
+            trusted-substituters = https://nix-community.cachix.org https://cache.nixos.org https://cache.flox.dev https://kasuboski-dotfiles.cachix.org
+            substituters = https://nix-community.cachix.org https://cache.nixos.org https://cache.flox.dev https://kasuboski-dotfiles.cachix.org
 
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@e468171a9de216ec08956ac3ada2f0791b6bd435 # v3
