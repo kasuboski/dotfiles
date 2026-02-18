@@ -67,7 +67,7 @@ jobs:
           case "${{ matrix.system }}" in
             x86_64-linux)
               echo "Building NixOS configurations for x86_64-linux..."
-              nix build .#nixosConfigurations.fettig.config.system.build.toplevel --no-link
+              nix build .#nixosConfigurations.forge.config.system.build.toplevel --no-link
               nix build .#nixosConfigurations.ziel.config.system.build.toplevel --no-link
               nix build .#nixosConfigurations.nixosx86.config.system.build.toplevel --no-link
               nix build .#nixosConfigurations.live.config.system.build.toplevel --no-link

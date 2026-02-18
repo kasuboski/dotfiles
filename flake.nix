@@ -46,11 +46,11 @@
     devShells = forEachPkgs (pkgs: import ./shell.nix {inherit pkgs;});
     overlays = import ./overlays;
     nixosConfigurations = {
-      fettig = nixpkgs.lib.nixosSystem {
+      forge = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = {inherit inputs outputs;};
         modules = [
-          ./hosts/fettig/configuration.nix
+          ./hosts/forge/configuration.nix
         ];
       };
 
