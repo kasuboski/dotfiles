@@ -68,6 +68,8 @@
     WORKDIR /root/flake
     COPY . .
     RUN home-manager-install && nix-store --gc
+    WORKDIR /projects
+    ENTRYPOINT ["/root/.nix-profile/bin/fish"]
   '';
 in
   pkgs.writeShellScriptBin "buildImage" ''
