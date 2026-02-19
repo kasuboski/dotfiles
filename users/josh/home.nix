@@ -201,6 +201,22 @@ in {
       uv
       yq-go
 
+      (pkgs.writeShellApplication {
+        name = "ns";
+        runtimeInputs = with pkgs; [
+          fzf
+          nix-search-tv
+        ];
+        # the version of this script with the pkg was broken
+        text = builtins.readFile (pkgs.fetchFromGitHub {
+            owner = "3timeslazy";
+            repo = "nix-search-tv";
+            rev = "73a34372b15b3824586b3f65c22c4ff8f0eb4c2c";
+            sha256 = "0b7fwc4x74z61hmyxsix80gj3gpq2cw64a7w0bn4c1cz7ld8qqmx";
+          }
+          + "/nixpkgs.sh");
+      })
+
       inputs.flox.packages.${pkgs.system}.default
     ]
     ++ (lib.optionals isDarwin [
