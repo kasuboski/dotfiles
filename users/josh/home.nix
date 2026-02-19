@@ -91,6 +91,7 @@ in {
           # not sure why this isn't happening already
           fish_add_path -a /run/current-system/sw/bin
           fish_add_path -a /etc/profiles/per-user/${config.home.username}/bin
+          fish_add_path -a ${homePrefix}/${config.home.username}/.nix-profile/bin
           # this for sure needs to be first
           fish_add_path -p /run/wrappers/bin
           # End Nix
