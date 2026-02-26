@@ -194,6 +194,7 @@ in {
       devenv
       du-dust
       fd
+      glow
       hwatch
       jq
       nixd
