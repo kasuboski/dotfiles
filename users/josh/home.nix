@@ -199,6 +199,7 @@ in {
       jq
       nixd
       ripgrep
+      shellcheck
       uv
       yq-go
 
