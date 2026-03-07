@@ -192,7 +192,7 @@ in {
       charm-freeze
       comma
       devenv
-      du-dust
+      dust
       fd
       glow
       hwatch
