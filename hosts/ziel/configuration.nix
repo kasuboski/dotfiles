@@ -15,11 +15,7 @@
     ../common/global
     ../common/optional/ephemeral.nix
     ../../users/josh
-    ./home-assistant.nix
-    ./blocky.nix
-    ./monitoring.nix
     ./tunnel.nix
-    ./vscode-server.nix
   ];
 
   nixpkgs.config.allowUnfree = true;
@@ -45,7 +41,7 @@
   ];
 
   fileSystems."/mnt/storage" = {
-    device = "192.168.86.186:/storage";
+    device = "192.168.86.45:/storage";
     fsType = "nfs";
     options = ["x-systemd.automount" "noauto"];
   };
