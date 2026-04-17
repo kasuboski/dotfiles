@@ -42,6 +42,8 @@
     ghostty.terminfo
   ];
 
+  programs.nix-ld.enable = true;
+
   services.tailscale = {
     enable = true;
   };
