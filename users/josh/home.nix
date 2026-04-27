@@ -189,6 +189,7 @@ in {
   home.packages = with pkgs;
     [
       alejandra
+      autossh
       charm-freeze
       comma
       devenv
@@ -219,7 +220,6 @@ in {
           + "/nixpkgs.sh");
       })
 
-      inputs.flox.packages.${pkgs.system}.default
     ]
     ++ (lib.optionals isDarwin [
       pkgs.docker-client
