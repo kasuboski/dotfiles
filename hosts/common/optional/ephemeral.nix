@@ -1,6 +1,5 @@
 {
   config,
-  pkgs,
   lib,
   ...
 }: {
@@ -31,33 +30,42 @@
     Defaults lecture = never
   '';
 
-  boot.initrd.postDeviceCommands = pkgs.lib.mkBefore ''
-    mkdir -p /mnt
+  boot.initrd.systemd.services.btrfs-rollback = {
+    description = "Rollback btrfs root subvolume to blank snapshot";
+    wantedBy = ["sysroot.mount"];
+    before = ["sysroot.mount"];
+    after = ["systemd-modules-load.service"];
+    requires = ["systemd-modules-load.service"];
+    unitConfig.DefaultDependencies = false;
+    serviceConfig.Type = "oneshot";
+    script = ''
+      mkdir -p /mnt
 
-    # We first mount the btrfs root to /mnt
-    # so we can manipulate btrfs subvolumes.
-    mount -t btrfs -o subvol=/ /dev/disk/by-label/nixos /mnt
+      # We first mount the btrfs root to /mnt
+      # so we can manipulate btrfs subvolumes.
+      mount -t btrfs -o subvol=/ /dev/disk/by-label/nixos /mnt
 
-    # List all subvolumes on the filesystem.
-    # Grep for any path that is exactly "root" or starts with "root/".
-    # This correctly identifies the parent and all nested children.
-    # We then reverse this list with `tac` to ensure we delete children first.
-    btrfs subvolume list /mnt |
-    grep -E ' path root(/|$)' |
-    awk '{print $NF}' |
-    tac |
-    while read subvolume; do
-      echo "deleting /$subvolume subvolume..."
-      btrfs subvolume delete "/mnt/$subvolume"
-    done &&
-    echo "deleting /root subvolume..." &&
-    btrfs subvolume delete /mnt/root
+      # List all subvolumes on the filesystem.
+      # Grep for any path that is exactly "root" or starts with "root/".
+      # This correctly identifies the parent and all nested children.
+      # We then reverse this list with `tac` to ensure we delete children first.
+      btrfs subvolume list /mnt |
+      grep -E ' path root(/|$)' |
+      awk '{print $NF}' |
+      tac |
+      while read subvolume; do
+        echo "deleting /$subvolume subvolume..."
+        btrfs subvolume delete "/mnt/$subvolume"
+      done &&
+      echo "deleting /root subvolume..." &&
+      btrfs subvolume delete /mnt/root
 
-    echo "restoring blank /root subvolume..."
-    btrfs subvolume snapshot /mnt/root-blank /mnt/root
+      echo "restoring blank /root subvolume..."
+      btrfs subvolume snapshot /mnt/root-blank /mnt/root
 
-    # Once we're done rolling back to a blank snapshot,
-    # we can unmount /mnt and continue on the boot process.
-    umount /mnt
-  '';
+      # Once we're done rolling back to a blank snapshot,
+      # we can unmount /mnt and continue on the boot process.
+      umount /mnt
+    '';
+  };
 }
