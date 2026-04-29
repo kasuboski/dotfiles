@@ -16,7 +16,7 @@
 in {
   imports = [
     inputs.vscode-server.homeModules.default
-    inputs.nixvim.homeManagerModules.nixvim
+    inputs.nixvim.homeModules.nixvim
     ./kubernetes.nix
   ];
   services.vscode-server.enable = isLinux;
@@ -49,18 +49,23 @@ in {
     bun.enable = true;
     git = {
       enable = true;
-      userName = "Josh Kasuboski";
-      userEmail = "josh.kasuboski@gmail.com";
       ignores = [
         ".direnv"
         "result"
       ];
-      extraConfig = {
+      settings = {
+        user = {
+          name = "Josh Kasuboski";
+          email = "josh.kasuboski@gmail.com";
+        };
         init.defaultBranch = "main";
         github.user = "kasuboski";
         color.ui = true;
       };
-      delta.enable = true;
+    };
+    delta = {
+      enable = true;
+      enableGitIntegration = true;
     };
     gh.enable = true;
     bat = {
