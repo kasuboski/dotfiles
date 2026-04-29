@@ -219,7 +219,6 @@ in {
           }
           + "/nixpkgs.sh");
       })
-
     ]
     ++ (lib.optionals isDarwin [
       pkgs.docker-client
