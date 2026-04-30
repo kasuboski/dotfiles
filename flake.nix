@@ -23,6 +23,8 @@
     disko.inputs.nixpkgs.follows = "nixpkgs";
     nixos-anywhere.url = "github:nix-community/nixos-anywhere";
     nixos-anywhere.inputs.nixpkgs.follows = "nixpkgs";
+
+    zmx.url = "github:neurosnap/zmx";
   };
 
   outputs = {
