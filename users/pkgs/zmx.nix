@@ -42,11 +42,10 @@ in
     src = zmx-src.outPath;
     zigBuildFlags = ["-Doptimize=ReleaseSafe"];
     zigBuildZonLock = ./zmx-build.zig.zon2json-lock;
-    nativeBuildInputs =
-      lib.optionals isDarwin [
-        pkgs.apple-sdk
-        darwin-sandbox-helpers
-      ];
+    nativeBuildInputs = lib.optionals isDarwin [
+      pkgs.apple-sdk
+      darwin-sandbox-helpers
+    ];
 
     # The apple-sdk setup hook should set SDKROOT and DEVELOPER_DIR, but
     # in this stdenvNoCC derivation it doesn't take effect. Set them
