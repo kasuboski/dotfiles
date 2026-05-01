@@ -32,6 +32,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
+      # Ubuntu 24.04+ restricts unprivileged user namespaces via AppArmor.
+      # zig2nix wraps zig with bwrap which needs user namespaces.
+      - name: Enable unprivileged user namespaces
+        if: runner.os == 'Linux'
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@c5a866b6ab867e88becbed4467b93592bce69f8a # v21
         with:
@@ -72,22 +78,22 @@ jobs:
               nix build .#nixosConfigurations.ziel.config.system.build.toplevel --no-link
               nix build .#nixosConfigurations.nixosx86.config.system.build.toplevel --no-link
               nix build .#nixosConfigurations.live.config.system.build.toplevel --no-link
-              nix build .#homeConfigurations."josh@x86".activationPackage --no-link
+              nix build .#homeConfigurations."josh@x86_64-linux".activationPackage --no-link
               ;;
             aarch64-linux)
               echo "Building NixOS configurations for aarch64-linux..."
               nix build .#nixosConfigurations.nixos.config.system.build.toplevel --no-link
-              nix build .#homeConfigurations."josh@aarch64".activationPackage --no-link
+              nix build .#homeConfigurations."josh@aarch64-linux".activationPackage --no-link
               ;;
             x86_64-darwin)
               echo "Building Darwin configurations for x86_64-darwin..."
               nix build .#darwinConfigurations.work-mac.system --no-link
-              nix build .#homeConfigurations."josh@x86".activationPackage --no-link
+              nix build .#homeConfigurations."josh@x86_64-darwin".activationPackage --no-link
               ;;
             aarch64-darwin)
               echo "Building Darwin configurations for aarch64-darwin..."
               nix build .#darwinConfigurations.personal-mac.system --no-link
-              nix build .#homeConfigurations."josh@aarch64".activationPackage --no-link
+              nix build .#homeConfigurations."josh@aarch64-darwin".activationPackage --no-link
               ;;
           esac
 

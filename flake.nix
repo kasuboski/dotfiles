@@ -1,7 +1,7 @@
 {
   nixConfig = {
-    extra-trusted-substituters = ["https://cache.flox.dev" "https://kasuboski-dotfiles.cachix.org"];
-    extra-trusted-public-keys = ["flox-cache-public-1:7F4OyH7ZCnFhcze3fJdfyXYLQw/aV7GEed86nQ7IsOs=" "kasuboski-dotfiles.cachix.org-1:MHEjS/mTAIU5O0W5yzglU+9shkWAkud88qAiO1CEas0="];
+    extra-trusted-substituters = ["https://kasuboski-dotfiles.cachix.org"];
+    extra-trusted-public-keys = ["kasuboski-dotfiles.cachix.org-1:MHEjS/mTAIU5O0W5yzglU+9shkWAkud88qAiO1CEas0="];
   };
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-unstable";
@@ -23,6 +23,8 @@
     disko.inputs.nixpkgs.follows = "nixpkgs";
     nixos-anywhere.url = "github:nix-community/nixos-anywhere";
     nixos-anywhere.inputs.nixpkgs.follows = "nixpkgs";
+
+    zmx.url = "github:neurosnap/zmx";
   };
 
   outputs = {
@@ -100,7 +102,10 @@
     homeConfigurations = let
       lib = nixpkgs.lib;
       users = ["josh" "root" "ubuntu"];
-      systemToArch = system: builtins.head (lib.strings.splitString "_" (builtins.head (lib.strings.splitString "-" system)));
+      systemToName = system: let
+        parts = lib.strings.splitString "-" system;
+      in
+        (builtins.head parts) + "-" + (builtins.elemAt parts 1);
       userSystems = lib.lists.concatMap (u: lib.lists.concatMap (sys: [(lib.attrsets.nameValuePair u sys)]) systems) users;
       mkHomeManagerConfig = {
         user,
@@ -123,7 +128,7 @@
       configs = builtins.listToAttrs (builtins.map ({
           name,
           value,
-        }: (lib.attrsets.nameValuePair (lib.concatStringsSep "@" [name (systemToArch value)]) (mkHomeManagerConfig {
+        }: (lib.attrsets.nameValuePair (lib.concatStringsSep "@" [name (systemToName value)]) (mkHomeManagerConfig {
           user = name;
           system = value;
         })))
