@@ -18,13 +18,13 @@
       ];
       volumes = ["ollama:/root/.ollama"];
     };
-    "ollama-nvidia" = {
-      image = "ollama/ollama";
-      ports = ["11435:11434"];
+    "unsloth" = {
+      image = "unsloth/unsloth";
+      ports = ["8000:8000" "8888:8888"];
       devices = [
         "nvidia.com/gpu=all"
       ];
-      volumes = ["ollama:/root/.ollama"];
+      volumes = ["unsloth-work:/unsloth/work" "unsloth-studio:/unsloth/studio"];
     };
   };
 }
