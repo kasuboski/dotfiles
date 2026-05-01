@@ -49,9 +49,9 @@
         echo 'export PATH=/root/.nix-profile/bin:$PATH' > $out/root/.bashrc
 
       '')
-      # #github:kasuboski/dotfiles?dir=nixos#root@x86
+      # #github:kasuboski/dotfiles?dir=nixos#root@x86_64-linux
       (pkgs.writeShellScriptBin "home-manager-install" ''
-        ${pkgs.home-manager}/bin/home-manager switch --flake .#root@x86
+        ${pkgs.home-manager}/bin/home-manager switch --flake .#root@x86_64-linux
       '')
     ];
     maxLayers = 100;
