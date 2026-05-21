@@ -104,6 +104,7 @@ in {
           fish_add_path -a /run/current-system/sw/bin
           fish_add_path -a /etc/profiles/per-user/${config.home.username}/bin
           fish_add_path -a ${homePrefix}/${config.home.username}/.nix-profile/bin
+          fish_add_path -a "${homePrefix}/${config.home.username}/.cache/.bun/bin"
           # this for sure needs to be first
           fish_add_path -p /run/wrappers/bin
           # End Nix

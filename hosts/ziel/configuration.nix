@@ -40,6 +40,15 @@
     lm_sensors
   ];
 
+  virtualisation.incus.enable = true;
+
+  # Ensure incus.socket starts after the persistence mount for /var/lib/incus
+  systemd.sockets.incus.unitConfig.Requires = ["var-lib-incus.mount"];
+  systemd.sockets.incus.unitConfig.After = ["var-lib-incus.mount"];
+
+  networking.nftables.enable = true;
+  networking.firewall.trustedInterfaces = ["incusbr0"];
+
   fileSystems."/mnt/storage" = {
     device = "192.168.86.45:/storage";
     fsType = "nfs";
@@ -52,7 +61,7 @@
   users.mutableUsers = false;
 
   services.netdata.enable = true;
-  networking.firewall.allowedTCPPorts = [19999];
+  networking.firewall.allowedTCPPorts = [19999 9119];
 
   # Enable the OpenSSH daemon.
   services.openssh = {
