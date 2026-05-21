@@ -13,7 +13,8 @@
       ++ lib.optional config.services.prometheus.enable "/var/lib/${config.services.prometheus.stateDir}"
       ++ lib.optional config.services.grafana.enable config.services.grafana.dataDir
       ++ lib.optional config.services.samba.enable "/var/lib/samba"
-      ++ lib.optional config.virtualisation.docker.enable "/var/lib/docker";
+      ++ lib.optional config.virtualisation.docker.enable "/var/lib/docker"
+      ++ lib.optional config.virtualisation.incus.enable "/var/lib/incus";
     files = [
       "/etc/ssh/ssh_host_ed25519_key"
       "/etc/ssh/ssh_host_ed25519_key.pub"
