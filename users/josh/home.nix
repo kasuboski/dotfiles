@@ -8,12 +8,6 @@
   isDarwin = pkgs.stdenv.isDarwin;
   isLinux = pkgs.stdenv.isLinux;
 
-  zmx = import ../pkgs/zmx.nix {
-    inherit lib pkgs;
-    inherit (pkgs) system;
-    zig2nix = inputs.zmx.inputs.zig2nix;
-    zmx-src = inputs.zmx;
-  };
   homePrefix =
     if isDarwin
     then "/Users"
@@ -255,9 +249,6 @@ in {
           }
           + "/nixpkgs.sh");
       })
-    ]
-    ++ [
-      zmx
     ]
     ++ (lib.optionals isDarwin [
       pkgs.docker-client
