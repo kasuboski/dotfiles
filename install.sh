@@ -28,8 +28,10 @@ elif [ "$os" = "Linux" ]; then
     install_nix
   fi
 
-  arch=$(uname -m | cut -d '_' -f 1)
-  nix run --refresh home-manager/master -- switch --flake "github:kasuboski/dotfiles#$USER@$arch"
+  # Home Manager configurations are keyed by <user>@<system>, where the
+  # system includes both the CPU architecture and the operating system.
+  system="$(uname -m)-linux"
+  nix run --refresh home-manager/master -- switch --flake "github:kasuboski/dotfiles#$USER@$system"
 
   if ! command -v docker > /dev/null; then
     echo "Installing Docker"
