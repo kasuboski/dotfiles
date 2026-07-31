@@ -34,11 +34,11 @@ ARCH=$(uname -m)
 case "$PLATFORM" in
     "Darwin")
         SYSTEM_TYPE="darwin"
-        if [[ "$ARCH" == "arm64" ]]; then
-            CURRENT_SYSTEM="aarch64-darwin"
-        else
-            CURRENT_SYSTEM="x86_64-darwin"
+        if [[ "$ARCH" != "arm64" ]]; then
+            log_error "Unsupported Darwin architecture: $ARCH"
+            exit 1
         fi
+        CURRENT_SYSTEM="aarch64-darwin"
         ;;
     "Linux")
         SYSTEM_TYPE="linux"

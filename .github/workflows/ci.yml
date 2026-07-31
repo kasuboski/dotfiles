@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -20,8 +20,6 @@ jobs:
             system: x86_64-linux
           - runner: ubuntu-24.04-arm
             system: aarch64-linux
-          - runner: macos-15-intel
-            system: x86_64-darwin
           - runner: macos-15
             system: aarch64-darwin
 
@@ -30,7 +28,9 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
 
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@c5a866b6ab867e88becbed4467b93592bce69f8a # v21
@@ -79,13 +79,9 @@ jobs:
               nix build .#nixosConfigurations.nixos.config.system.build.toplevel --no-link
               nix build .#homeConfigurations."josh@aarch64-linux".activationPackage --no-link
               ;;
-            x86_64-darwin)
-              echo "Building Darwin configurations for x86_64-darwin..."
-              nix build .#darwinConfigurations.work-mac.system --no-link
-              nix build .#homeConfigurations."josh@x86_64-darwin".activationPackage --no-link
-              ;;
             aarch64-darwin)
               echo "Building Darwin configurations for aarch64-darwin..."
+              nix build .#darwinConfigurations.work-mac.system --no-link
               nix build .#darwinConfigurations.personal-mac.system --no-link
               nix build .#homeConfigurations."josh@aarch64-darwin".activationPackage --no-link
               ;;
