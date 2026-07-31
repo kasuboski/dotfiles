@@ -23,8 +23,8 @@ in {
   services.vscode-server.enable = isLinux;
 
   home = {
-    stateVersion = "23.05";
-    username = "josh";
+    stateVersion = lib.mkDefault "23.05";
+    username = lib.mkDefault "josh";
     homeDirectory = lib.mkDefault "${homePrefix}/${config.home.username}";
   };
 
@@ -40,6 +40,7 @@ in {
     });
   home.sessionPath = [
     "$HOME/.local/bin"
+    "$HOME/.cache/.bun/bin"
   ];
 
   xdg.enable = true;
@@ -88,22 +89,9 @@ in {
         "fish_config theme choose CatppuccinMocha"
         (lib.strings.optionalString isDarwin "fish_add_path '/Applications/Visual Studio Code.app/Contents/Resources/app/bin'")
       ];
-      shellInit = lib.strings.concatStringsSep "\n" [
-        ''
-          # Nix
-          if test -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.fish'
-            source '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.fish'
-          end
-          # not sure why this isn't happening already
-          fish_add_path -a /run/current-system/sw/bin
-          fish_add_path -a /etc/profiles/per-user/${config.home.username}/bin
-          fish_add_path -a ${homePrefix}/${config.home.username}/.nix-profile/bin
-          fish_add_path -a "${homePrefix}/${config.home.username}/.cache/.bun/bin"
-          # this for sure needs to be first
-          fish_add_path -p /run/wrappers/bin
-          # End Nix
-        ''
-      ];
+      shellInit = lib.strings.optionalString isLinux ''
+        fish_add_path -p /run/wrappers/bin
+      '';
       shellAliases = {
         kgpo = "k get pods";
         vim = "nvim";

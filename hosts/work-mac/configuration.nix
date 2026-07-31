@@ -1,50 +1,24 @@
-{
-  inputs,
-  outputs,
-  config,
-  lib,
-  pkgs,
-  ...
-}: {
-  imports = [
-    inputs.home-manager.darwinModules.home-manager
-    {
-      home-manager.extraSpecialArgs = {inherit inputs;};
-      home-manager.useGlobalPkgs = true;
-      home-manager.useUserPackages = true;
-    }
-    {nixpkgs.overlays = [outputs.overlays.default];}
-    ../../users/josh/darwin.nix
-    {home-manager.users.josh = import ../../users/josh/work.nix;}
-  ];
+{pkgs, ...}: {
+  imports = [../common/darwin.nix];
 
-  nix = {
-    package = pkgs.lixPackageSets.stable.lix;
-    settings = {
-      trusted-users = ["@admin"];
-      experimental-features = ["nix-command" "flakes"];
-    };
-    optimise.automatic = true;
-    gc = {
-      automatic = true;
-      options = "--delete-older-than 2d";
-    };
+  # This is a fresh nix-darwin installation.
+  system.stateVersion = 6;
+
+  users.users.jkasper = {
+    home = "/Users/jkasper";
+    shell = pkgs.fish;
   };
 
-  ids.gids.nixbld = 30000;
-
-  # zsh is the default shell on Mac and we want to make sure that we're
-  # configuring the rc correctly with nix-darwin paths.
-  programs.zsh.enable = true;
-  programs.zsh.shellInit = ''
-    # Nix
-    if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
-      . '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
-    fi
-    # End Nix
-  '';
-
-  environment.shells = with pkgs; [bashInteractive zsh fish];
-
-  system.stateVersion = 5;
+  home-manager.users.jkasper = {
+    imports = [
+      ../../users/josh/home.nix
+      ../../users/josh/work.nix
+    ];
+    home = {
+      username = "jkasper";
+      stateVersion = "26.05";
+    };
+    # Fish requests a man cache, but current Home Manager uses macOS's man.
+    programs.man.generateCaches = false;
+  };
 }

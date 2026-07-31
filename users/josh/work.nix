@@ -4,6 +4,5 @@
     crane
     kubernetes-helm
     oras
-    pipenv
   ];
 }

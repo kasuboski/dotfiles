@@ -20,7 +20,12 @@ if uname -v | grep NixOS 2> /dev/null; then
   echo "RUN nixos-rebuild switch --flake github:kasuboski/dotfiles#host --use-remote-sudo"
 elif [ "$os" = "Darwin" ]; then
   echo "Detected Mac"
-  echo "RUN nix run nix-darwin -- switch --flake .#(which-mac)"
+  if ! command -v nix > /dev/null; then
+    echo "No Nix found; Installing Lix"
+    install_nix
+  fi
+  echo "RUN nix run nix-darwin -- switch --flake .#work-mac"
+  echo "Use .#personal-mac instead on the personal Mac."
 elif [ "$os" = "Linux" ]; then
   echo "Detected Linux"
   if ! command -v nix > /dev/null; then

@@ -35,7 +35,7 @@
     ...
   } @ inputs: let
     inherit (self) outputs;
-    systems = ["x86_64-linux" "aarch64-linux" "x86_64-darwin" "aarch64-darwin"];
+    systems = ["x86_64-linux" "aarch64-linux" "aarch64-darwin"];
     forEachSystem = nixpkgs.lib.genAttrs systems;
     forEachPkgs = f: forEachSystem (sys: f nixpkgs.legacyPackages.${sys});
   in {
@@ -140,7 +140,7 @@
 
     darwinConfigurations = {
       "work-mac" = darwin.lib.darwinSystem {
-        system = "x86_64-darwin";
+        system = "aarch64-darwin";
         specialArgs = {inherit inputs outputs;};
         modules = [./hosts/work-mac/configuration.nix];
       };

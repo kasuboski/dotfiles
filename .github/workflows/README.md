@@ -33,11 +33,10 @@ The CI workflow (`ci.yml`) runs on:
 
 ### Build Matrix
 
-Builds on 4 platforms with native hardware:
-- `ubuntu-latest` (x86_64-linux) - Builds x86_64 NixOS configs (fettig, ziel, nixosx86, live)
+Builds on 3 platforms with native hardware:
+- `ubuntu-latest` (x86_64-linux) - Builds x86_64 NixOS configs (forge, ziel, nixosx86, live)
 - `ubuntu-24.04-arm` (aarch64-linux) - Builds aarch64 NixOS config (nixos) natively on ARM
-- `macos-13` (x86_64-darwin) - Builds work-mac Darwin config
-- `macos-14` (aarch64-darwin) - Builds personal-mac Darwin config
+- `macos-15` (aarch64-darwin) - Builds both Darwin configs
 
 ### Native ARM Support
 
@@ -51,10 +50,9 @@ This workflow uses GitHub's native ARM runners (`ubuntu-24.04-arm`) which provid
 ## What Gets Built
 
 ### Per Platform:
-- **x86_64-linux**: NixOS configs (fettig, ziel, nixosx86, live)
+- **x86_64-linux**: NixOS configs (forge, ziel, nixosx86, live)
 - **aarch64-linux**: NixOS config (nixos) - built natively on ARM hardware
-- **x86_64-darwin**: Darwin config (work-mac)
-- **aarch64-darwin**: Darwin config (personal-mac)
+- **aarch64-darwin**: Darwin configs (work-mac and personal-mac)
 
 ### All Platforms:
 - Home Manager configurations
@@ -79,9 +77,9 @@ You can test configurations locally using the same commands as CI:
 ./scripts/flake-check.sh
 
 # Build specific configurations
-nix build .#nixosConfigurations.fettig --no-link
-nix build .#darwinConfigurations.work-mac --no-link
-nix build .#homeConfigurations."josh@x86_64" --no-link
+nix build .#nixosConfigurations.forge.config.system.build.toplevel --no-link
+nix build .#darwinConfigurations.work-mac.system --no-link
+nix build .#homeConfigurations."josh@aarch64-darwin".activationPackage --no-link
 
 # Test development environment
 nix develop --command echo "Dev shell works"
