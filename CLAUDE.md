@@ -33,7 +33,7 @@ nixos-rebuild switch --flake .#hostname --sudo
 **macOS (Darwin):**
 ```bash
 # Deploy Darwin configuration
-nix run nix-darwin -- switch --flake .#hostname
+sudo nix run nix-darwin -- switch --flake github:kasuboski/dotfiles#hostname
 
 # Available hosts: work-mac, personal-mac
 ```

@@ -24,8 +24,8 @@ elif [ "$os" = "Darwin" ]; then
     echo "No Nix found; Installing Lix"
     install_nix
   fi
-  echo "RUN nix run nix-darwin -- switch --flake .#work-mac"
-  echo "Use .#personal-mac instead on the personal Mac."
+  echo "RUN sudo nix run nix-darwin -- switch --flake github:kasuboski/dotfiles#work-mac"
+  echo "Use github:kasuboski/dotfiles#personal-mac instead on the personal Mac."
 elif [ "$os" = "Linux" ]; then
   echo "Detected Linux"
   if ! command -v nix > /dev/null; then
