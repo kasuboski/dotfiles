@@ -62,6 +62,7 @@
 
   services.netdata.enable = true;
   networking.firewall.allowedTCPPorts = [19999 9119];
+  virtualisation.docker.enable = true;
 
   # Enable the OpenSSH daemon.
   services.openssh = {
