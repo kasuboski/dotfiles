@@ -34,7 +34,20 @@
       # in both / and /nix/store.
       (pkgs.buildEnv {
         name = "root";
-        paths = [pkgs.bashInteractive pkgs.coreutils pkgs.lix pkgs.cacert pkgs.home-manager pkgs.git];
+        paths = [
+          pkgs.bashInteractive
+          pkgs.coreutils
+          pkgs.cacert
+          pkgs.curl
+          pkgs.git
+          pkgs.gzip
+          pkgs.home-manager
+          pkgs.lix
+          pkgs.mise
+          pkgs.gnutar
+          pkgs.unzip
+          pkgs.xz
+        ];
         pathsToLink = ["/bin" "/etc/ssl" "/tmp"];
       })
       (pkgs.runCommand "extraDirs" {} ''
@@ -58,6 +71,8 @@
     config = {
       Cmd = ["/bin/bash"];
       Env = [
+        "HOME=/root"
+        "PATH=/root/.nix-profile/bin:/bin"
         "USER=root"
         "SSL_CERT_FILE=/etc/ssl/certs/ca-bundle.crt"
       ];
