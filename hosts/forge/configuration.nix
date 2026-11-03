@@ -14,6 +14,7 @@
     ../common/optional/ephemeral.nix
     ../../users/josh
     ./docker.nix
+    ./t3code.nix
   ];
 
   nixpkgs.overlays = [outputs.overlays.default];
