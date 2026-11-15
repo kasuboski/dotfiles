@@ -1,8 +1,18 @@
 {
   config,
   lib,
+  pkgs,
+  utils,
   ...
-}: {
+}: let
+  rootDevice = config.fileSystems."/".device;
+  rootDeviceUnit = "${utils.escapeSystemdPath rootDevice}.device";
+  resetRoot = pkgs.writeShellApplication {
+    name = "btrfs-reset-root";
+    runtimeInputs = [pkgs.btrfs-progs pkgs.coreutils pkgs.util-linux];
+    text = builtins.readFile ./btrfs-reset-root.sh;
+  };
+in {
   options.local.persistence.docker = lib.mkOption {
     type = lib.types.bool;
     default = true;
@@ -38,42 +48,38 @@
       Defaults lecture = never
     '';
 
+    system.build.btrfsResetRoot = resetRoot;
+    system.build.btrfsRollbackInitrdTest = pkgs.writeShellApplication {
+      name = "test-btrfs-rollback-initrd";
+      runtimeInputs = with pkgs; [btrfs-progs coreutils dracut gawk gnugrep util-linux];
+      text = builtins.readFile ../../../scripts/test-btrfs-rollback-initrd.sh;
+    };
+    # The initrd copies ELF dependencies, not arbitrary tools named in a shell
+    # wrapper's PATH. Register findmnt explicitly; btrfs/coreutils are provided
+    # by the Btrfs/initrd modules and verified by the packed-initrd test.
+    boot.initrd.systemd.storePaths = [resetRoot];
+    boot.initrd.systemd.extraBin.findmnt = lib.getExe' pkgs.util-linux "findmnt";
     boot.initrd.systemd.services.btrfs-rollback = {
       description = "Rollback btrfs root subvolume to blank snapshot";
+      # A failed reset leaves root intact; log the failure but allow booting it.
       wantedBy = ["sysroot.mount"];
       before = ["sysroot.mount"];
-      after = ["systemd-modules-load.service"];
-      requires = ["systemd-modules-load.service"];
-      unitConfig.DefaultDependencies = false;
-      serviceConfig.Type = "oneshot";
+      after = [rootDeviceUnit];
+      requires = [rootDeviceUnit];
+      unitConfig = {
+        DefaultDependencies = false;
+        ConditionPathIsMountPoint = "!/sysroot";
+      };
+      serviceConfig = {
+        Type = "oneshot";
+        RemainAfterExit = true;
+      };
       script = ''
-        mkdir -p /mnt
-
-        # We first mount the btrfs root to /mnt
-        # so we can manipulate btrfs subvolumes.
-        mount -t btrfs -o subvol=/ /dev/disk/by-label/nixos /mnt
-
-        # List all subvolumes on the filesystem.
-        # Grep for any path that is exactly "root" or starts with "root/".
-        # This correctly identifies the parent and all nested children.
-        # We then reverse this list with `tac` to ensure we delete children first.
-        btrfs subvolume list /mnt |
-        grep -E ' path root(/|$)' |
-        awk '{print $NF}' |
-        tac |
-        while read subvolume; do
-          echo "deleting /$subvolume subvolume..."
-          btrfs subvolume delete "/mnt/$subvolume"
-        done &&
-        echo "deleting /root subvolume..." &&
-        btrfs subvolume delete /mnt/root
-
-        echo "restoring blank /root subvolume..."
-        btrfs subvolume snapshot /mnt/root-blank /mnt/root
-
-        # Once we're done rolling back to a blank snapshot,
-        # we can unmount /mnt and continue on the boot process.
-        umount /mnt
+        set -eu
+        mkdir -p /run/btrfs-rollback
+        mount -t btrfs -o subvolid=5 ${lib.escapeShellArg rootDevice} /run/btrfs-rollback
+        trap 'umount /run/btrfs-rollback' EXIT
+        ${resetRoot}/bin/btrfs-reset-root /run/btrfs-rollback
       '';
     };
   };
