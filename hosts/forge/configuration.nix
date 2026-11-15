@@ -14,6 +14,7 @@
     ../common/optional/ephemeral.nix
     ../../users/josh
     ./docker.nix
+    ./storage.nix
     ./t3code.nix
   ];
 

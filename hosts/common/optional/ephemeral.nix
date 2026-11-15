@@ -3,70 +3,78 @@
   lib,
   ...
 }: {
-  environment.persistence."/persist" = {
-    directories =
-      [
-        "/etc/nixos"
-        "/var/lib/nixos"
-      ]
-      ++ lib.optional config.services.tailscale.enable "/var/lib/tailscale"
-      ++ lib.optional config.services.prometheus.enable "/var/lib/${config.services.prometheus.stateDir}"
-      ++ lib.optional config.services.grafana.enable config.services.grafana.dataDir
-      ++ lib.optional config.services.samba.enable "/var/lib/samba"
-      ++ lib.optional config.virtualisation.docker.enable "/var/lib/docker"
-      ++ lib.optional config.virtualisation.incus.enable "/var/lib/incus";
-    files = [
-      "/etc/ssh/ssh_host_ed25519_key"
-      "/etc/ssh/ssh_host_ed25519_key.pub"
-      "/etc/ssh/ssh_host_rsa_key"
-      "/etc/ssh/ssh_host_rsa_key.pub"
-    ];
+  options.local.persistence.docker = lib.mkOption {
+    type = lib.types.bool;
+    default = true;
+    description = "Persist Docker on the system disk (disable when Docker has its own data mount).";
   };
 
-  # Handle machine-id properly with impermanence by symlinking to persistent storage
-  environment.etc."machine-id".source = "/persist/etc/machine-id";
+  config = {
+    environment.persistence."/persist" = {
+      directories =
+        [
+          "/etc/nixos"
+          "/var/lib/nixos"
+        ]
+        ++ lib.optional config.services.tailscale.enable "/var/lib/tailscale"
+        ++ lib.optional config.services.prometheus.enable "/var/lib/${config.services.prometheus.stateDir}"
+        ++ lib.optional config.services.grafana.enable config.services.grafana.dataDir
+        ++ lib.optional config.services.samba.enable "/var/lib/samba"
+        ++ lib.optional (config.virtualisation.docker.enable && config.local.persistence.docker) "/var/lib/docker"
+        ++ lib.optional config.virtualisation.incus.enable "/var/lib/incus";
+      files = [
+        "/etc/ssh/ssh_host_ed25519_key"
+        "/etc/ssh/ssh_host_ed25519_key.pub"
+        "/etc/ssh/ssh_host_rsa_key"
+        "/etc/ssh/ssh_host_rsa_key.pub"
+      ];
+    };
 
-  security.sudo.extraConfig = ''
-    # rollback results in sudo lectures after each reboot
-    Defaults lecture = never
-  '';
+    # Handle machine-id properly with impermanence by symlinking to persistent storage
+    environment.etc."machine-id".source = "/persist/etc/machine-id";
 
-  boot.initrd.systemd.services.btrfs-rollback = {
-    description = "Rollback btrfs root subvolume to blank snapshot";
-    wantedBy = ["sysroot.mount"];
-    before = ["sysroot.mount"];
-    after = ["systemd-modules-load.service"];
-    requires = ["systemd-modules-load.service"];
-    unitConfig.DefaultDependencies = false;
-    serviceConfig.Type = "oneshot";
-    script = ''
-      mkdir -p /mnt
-
-      # We first mount the btrfs root to /mnt
-      # so we can manipulate btrfs subvolumes.
-      mount -t btrfs -o subvol=/ /dev/disk/by-label/nixos /mnt
-
-      # List all subvolumes on the filesystem.
-      # Grep for any path that is exactly "root" or starts with "root/".
-      # This correctly identifies the parent and all nested children.
-      # We then reverse this list with `tac` to ensure we delete children first.
-      btrfs subvolume list /mnt |
-      grep -E ' path root(/|$)' |
-      awk '{print $NF}' |
-      tac |
-      while read subvolume; do
-        echo "deleting /$subvolume subvolume..."
-        btrfs subvolume delete "/mnt/$subvolume"
-      done &&
-      echo "deleting /root subvolume..." &&
-      btrfs subvolume delete /mnt/root
-
-      echo "restoring blank /root subvolume..."
-      btrfs subvolume snapshot /mnt/root-blank /mnt/root
-
-      # Once we're done rolling back to a blank snapshot,
-      # we can unmount /mnt and continue on the boot process.
-      umount /mnt
+    security.sudo.extraConfig = ''
+      # rollback results in sudo lectures after each reboot
+      Defaults lecture = never
     '';
+
+    boot.initrd.systemd.services.btrfs-rollback = {
+      description = "Rollback btrfs root subvolume to blank snapshot";
+      wantedBy = ["sysroot.mount"];
+      before = ["sysroot.mount"];
+      after = ["systemd-modules-load.service"];
+      requires = ["systemd-modules-load.service"];
+      unitConfig.DefaultDependencies = false;
+      serviceConfig.Type = "oneshot";
+      script = ''
+        mkdir -p /mnt
+
+        # We first mount the btrfs root to /mnt
+        # so we can manipulate btrfs subvolumes.
+        mount -t btrfs -o subvol=/ /dev/disk/by-label/nixos /mnt
+
+        # List all subvolumes on the filesystem.
+        # Grep for any path that is exactly "root" or starts with "root/".
+        # This correctly identifies the parent and all nested children.
+        # We then reverse this list with `tac` to ensure we delete children first.
+        btrfs subvolume list /mnt |
+        grep -E ' path root(/|$)' |
+        awk '{print $NF}' |
+        tac |
+        while read subvolume; do
+          echo "deleting /$subvolume subvolume..."
+          btrfs subvolume delete "/mnt/$subvolume"
+        done &&
+        echo "deleting /root subvolume..." &&
+        btrfs subvolume delete /mnt/root
+
+        echo "restoring blank /root subvolume..."
+        btrfs subvolume snapshot /mnt/root-blank /mnt/root
+
+        # Once we're done rolling back to a blank snapshot,
+        # we can unmount /mnt and continue on the boot process.
+        umount /mnt
+      '';
+    };
   };
 }
