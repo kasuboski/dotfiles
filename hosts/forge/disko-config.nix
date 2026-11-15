@@ -6,7 +6,9 @@
       content = {
         type = "gpt";
         partitions = {
+          # Explicit priorities preserve the existing on-disk order: EFI, swap, root.
           boot = {
+            priority = 1;
             name = "boot";
             size = "511M";
             type = "EF00";
@@ -17,8 +19,10 @@
             };
           };
           root = {
+            priority = 3;
             name = "nixos";
             size = "100%";
+            # Match the existing layout's unused 6 GiB tail; swap is before root.
             end = "-6G";
             content = {
               type = "btrfs";
@@ -49,6 +53,7 @@
             };
           };
           swap = {
+            priority = 2;
             name = "swap";
             size = "6G";
             content = {
