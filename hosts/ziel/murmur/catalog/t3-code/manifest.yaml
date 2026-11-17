@@ -1,0 +1,9 @@
+manifest_version: 1
+name: t3-code
+description: Connect to T3 Code on Forge over the tailnet.
+source: https://github.com/pingdotgg/t3code/blob/main/docs/user/outside-agents.md
+transport:
+  type: http
+  url: https://forge.tail92a19.ts.net/mcp
+auth:
+  type: oauth

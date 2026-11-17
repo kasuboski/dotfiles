@@ -24,6 +24,12 @@ services:
     stop_grace_period: 1m
     volumes:
       - hermes-data:/opt/data
+      - type: bind
+        source: ./catalog/t3-code
+        target: /opt/hermes/optional-mcps/t3-code
+        read_only: true
+        bind:
+          create_host_path: false
     environment:
       HERMES_UID: "1000"
       HERMES_GID: "1000"
