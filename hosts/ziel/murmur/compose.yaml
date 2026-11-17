@@ -1,0 +1,40 @@
+# Adapted from getumbrel/murmur's standalone Compose example.
+# Run on Ziel with --env-file /home/josh/.config/murmur/.env.
+# Tailscale Serve forwards tailnet HTTPS to the loopback listener.
+name: murmur
+
+services:
+  murmur:
+    image: ghcr.io/getumbrel/murmur:0.15@sha256:27f492ad680dd0eda0040900b9d787f6fd2194946d571e15c158420c7d67fb85
+    init: true
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3300:3000"
+    volumes:
+      - murmur-data:/data
+    environment:
+      MURMUR_BUILTIN_HERMES_URL: http://hermes:9119
+      MURMUR_BUILTIN_HERMES_USERNAME: murmur
+      MURMUR_BUILTIN_HERMES_PASSWORD: ${MURMUR_HERMES_PASSWORD:?Set the Hermes dashboard password}
+      MURMUR_PASSWORD: ${MURMUR_PASSWORD:?Set the Murmur sign-in password}
+
+  hermes:
+    image: ghcr.io/getumbrel/hermes-agent-umbrel:v0.23.1@sha256:b7976dc05ed1348011c82bff15f04064eee53e307839337c9eec0b47af79b4f1
+    restart: unless-stopped
+    stop_grace_period: 1m
+    volumes:
+      - hermes-data:/opt/data
+    environment:
+      HERMES_UID: "1000"
+      HERMES_GID: "1000"
+      HERMES_DASHBOARD: "1"
+      HERMES_DASHBOARD_BASIC_AUTH_USERNAME: murmur
+      HERMES_DASHBOARD_BASIC_AUTH_PASSWORD: ${MURMUR_HERMES_PASSWORD:?Set the Hermes dashboard password}
+      HERMES_DASHBOARD_BASIC_AUTH_SECRET: ${MURMUR_HERMES_SECRET:?Set the Hermes dashboard signing secret}
+      HERMES_GATEWAY_BOOTSTRAP_STATE: running
+      HERMES_UMBREL_CONTEXT: "0"
+    command: ["gateway", "run"]
+
+volumes:
+  murmur-data:
+  hermes-data:
